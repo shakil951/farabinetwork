@@ -2,10 +2,16 @@
 <html lang="bn" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 <title>Farabi Network — লাইভ টিভি ও মুভি</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#e63946">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<!-- Favicon (SVG inline via data URI) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63946'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Arial Black,sans-serif' font-size='20' font-weight='900' fill='white'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23e63946'/%3E%3Ctext x='90' y='130' text-anchor='middle' font-family='Arial Black,sans-serif' font-size='110' font-weight='900' fill='white'%3EF%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -18,7 +24,7 @@
   --gold:      #f59e0b;
   --green:     #22c55e;
   --blue:      #3b82f6;
-  --header-h:  56px;
+  --header-h:  58px;
   --sidebar-w: 292px;
   --radius:    10px;
   --trans:     .18s ease;
@@ -60,7 +66,7 @@
    RESET + BASE
 ═══════════════════════════════════════ */
 *{margin:0;padding:0;box-sizing:border-box}
-html{-webkit-tap-highlight-color:transparent}
+html{-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
 
 body {
   font-family:'Hind Siliguri',sans-serif;
@@ -88,9 +94,10 @@ body,header,.sidebar,.content,.actions,.stats,.kb,footer,
 ═══════════════════════════════════════ */
 .init-progress{
   position:fixed;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  background:linear-gradient(90deg,var(--accent),var(--accent2),#ff8c94);
   z-index:9999;transform:scaleX(0);transform-origin:left;
   transition:transform .4s ease;border-radius:0 2px 2px 0;
+  box-shadow:0 0 8px rgba(230,57,70,.5);
 }
 
 /* ═══════════════════════════════════════
@@ -101,25 +108,37 @@ header {
   background:var(--bg2);
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;
-  padding:0 12px;gap:8px;
+  padding:0 14px;gap:8px;
   flex-shrink:0;z-index:200;
-  box-shadow:0 1px 0 var(--border), 0 4px 20px var(--shadow);
+  box-shadow:0 1px 0 var(--border), 0 4px 24px var(--shadow);
 }
 
+/* Logo */
 .logo {
   font-family:'Teko',sans-serif;
   font-size:22px;font-weight:700;letter-spacing:1.5px;
-  color:var(--text);display:flex;align-items:center;gap:2px;flex-shrink:0;
+  color:var(--text);display:flex;align-items:center;gap:4px;flex-shrink:0;
+  text-decoration:none;
 }
-.logo .f{color:var(--accent);font-size:28px;line-height:1}
-.logo-net{color:var(--text2);font-size:18px;font-weight:500;letter-spacing:2px}
+.logo-icon {
+  width:32px;height:32px;border-radius:8px;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:900;color:#fff;
+  font-family:'Teko',sans-serif;letter-spacing:0;
+  flex-shrink:0;box-shadow:0 2px 10px rgba(230,57,70,.4);
+}
+.logo-text{display:flex;align-items:baseline;gap:0;line-height:1}
+.logo .f{color:var(--accent);font-size:26px;line-height:1}
+.logo-net{color:var(--text2);font-size:17px;font-weight:500;letter-spacing:2px}
 
 .live-pill{
   background:var(--accent);color:#fff;
   font-size:8px;font-weight:700;font-family:'Teko',sans-serif;letter-spacing:1.5px;
-  padding:2px 6px;border-radius:3px;animation:blink 2s infinite;flex-shrink:0;
+  padding:2px 7px;border-radius:4px;animation:blink 2s infinite;flex-shrink:0;
+  box-shadow:0 1px 6px rgba(230,57,70,.35);
 }
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.55}}
 
 .load-indicator{
   display:flex;align-items:center;gap:6px;
@@ -136,25 +155,27 @@ header {
 
 .icon-btn{
   background:var(--bg3);border:1px solid var(--border2);
-  color:var(--text2);width:32px;height:32px;border-radius:8px;
+  color:var(--text2);width:34px;height:34px;border-radius:9px;
   cursor:pointer;font-size:15px;display:flex;align-items:center;
   justify-content:center;transition:all var(--trans);flex-shrink:0;
 }
 .icon-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--text3)}
+.icon-btn:active{transform:scale(.93)}
 
 .btn-add{
   display:flex;align-items:center;gap:5px;
   background:var(--accent);color:#fff;border:none;
-  padding:6px 12px;border-radius:7px;
+  padding:7px 13px;border-radius:8px;
   font-family:'Hind Siliguri',sans-serif;font-size:12.5px;font-weight:600;
   cursor:pointer;transition:all var(--trans);flex-shrink:0;white-space:nowrap;
+  box-shadow:0 2px 10px rgba(230,57,70,.3);
 }
-.btn-add:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 14px var(--glow)}
-.btn-add:active{transform:translateY(0)}
+.btn-add:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 5px 18px var(--glow)}
+.btn-add:active{transform:translateY(0);box-shadow:none}
 
 .dev-link{
   color:var(--text3);font-size:11.5px;font-weight:600;text-decoration:none;
-  border:1px solid var(--border2);padding:5px 10px;border-radius:6px;
+  border:1px solid var(--border2);padding:5px 11px;border-radius:7px;
   background:var(--bg3);transition:all var(--trans);flex-shrink:0;white-space:nowrap;
   font-family:'Hind Siliguri',sans-serif;letter-spacing:.2px;
 }
@@ -184,17 +205,17 @@ header {
 .gpill{
   background:var(--bg3);border:1px solid var(--border2);
   color:var(--text2);font-size:10.5px;font-weight:600;
-  padding:3px 9px;border-radius:20px;cursor:pointer;white-space:nowrap;
+  padding:3px 10px;border-radius:20px;cursor:pointer;white-space:nowrap;
   transition:all var(--trans);font-family:'Hind Siliguri',sans-serif;flex-shrink:0;
 }
-.gpill.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.gpill.on{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 1px 8px rgba(230,57,70,.3)}
 .gpill:hover:not(.on){background:var(--bg4);color:var(--text)}
 
 .tabs{
   display:flex;border-bottom:1px solid var(--border);flex-shrink:0;
 }
 .tab{
-  flex:1;padding:9px 2px;text-align:center;font-size:11px;font-weight:700;
+  flex:1;padding:10px 2px;text-align:center;font-size:11px;font-weight:700;
   cursor:pointer;border:none;background:transparent;
   color:var(--text3);font-family:'Hind Siliguri',sans-serif;
   transition:all var(--trans);border-bottom:2px solid transparent;white-space:nowrap;
@@ -213,22 +234,21 @@ header {
 }
 .search-input{
   width:100%;background:var(--input-bg);border:1.5px solid var(--border);
-  border-radius:8px;padding:7px 10px 7px 30px;color:var(--text);
+  border-radius:9px;padding:8px 10px 8px 30px;color:var(--text);
   font-size:12.5px;font-family:'Hind Siliguri',sans-serif;
-  outline:none;transition:border-color var(--trans);
+  outline:none;transition:border-color var(--trans), box-shadow var(--trans);
 }
-.search-input:focus{border-color:var(--accent)}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(230,57,70,.1)}
 .search-input::placeholder{color:var(--text3)}
 
 /* channel count badge */
 .ch-count{
-  padding:3px 8px;flex-shrink:0;background:var(--bg2);
+  padding:4px 10px;flex-shrink:0;background:var(--bg2);
   font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.3px;
   border-bottom:1px solid var(--border);
 }
 
 .ch-list{flex:1;overflow-y:auto;padding:5px}
-
 .pl-tab{flex:1;overflow-y:auto;padding:7px}
 
 /* empty state */
@@ -241,16 +261,17 @@ header {
 .empty-desc{font-size:11.5px;color:var(--text2);line-height:1.7}
 .btn-sm{
   background:var(--accent);color:#fff;border:none;padding:7px 16px;
-  border-radius:7px;font-size:12.5px;font-weight:600;cursor:pointer;
+  border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;
   font-family:'Hind Siliguri',sans-serif;transition:all var(--trans);margin-top:4px;
+  box-shadow:0 2px 10px rgba(230,57,70,.3);
 }
 .btn-sm:hover{background:var(--accent2)}
 
 /* channel item */
 .ch-item{
   display:flex;align-items:center;gap:8px;
-  padding:6px 8px;border-radius:8px;cursor:pointer;
-  border:1px solid transparent;margin-bottom:1px;
+  padding:7px 8px;border-radius:9px;cursor:pointer;
+  border:1px solid transparent;margin-bottom:2px;
   transition:background var(--trans), border-color var(--trans), transform .1s;
   -webkit-user-select:none;user-select:none;
 }
@@ -262,18 +283,18 @@ header {
 }
 
 .ch-logo{
-  width:34px;height:34px;border-radius:7px;flex-shrink:0;
+  width:36px;height:36px;border-radius:8px;flex-shrink:0;
   background:var(--bg4);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;font-size:14px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:15px;overflow:hidden;
 }
-.ch-logo img{width:100%;height:100%;object-fit:contain;border-radius:6px}
+.ch-logo img{width:100%;height:100%;object-fit:contain;border-radius:7px}
 
 .ch-info{flex:1;min-width:0}
 .ch-name{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ch-grp{font-size:10.5px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;font-weight:500}
 
 .live-dot{
-  width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;
+  width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;
   animation:pulse-live 2s infinite;
 }
 @keyframes pulse-live{
@@ -283,14 +304,15 @@ header {
 
 .fav-btn{
   background:none;border:none;cursor:pointer;color:var(--text3);
-  font-size:14px;padding:3px;flex-shrink:0;transition:color var(--trans);
+  font-size:15px;padding:3px;flex-shrink:0;transition:color var(--trans), transform .1s;
   line-height:1;
 }
+.fav-btn:hover{transform:scale(1.2)}
 .fav-btn:hover,.fav-btn.on{color:var(--gold)}
 
 /* skeleton */
 .skeleton{
-  height:48px;border-radius:8px;margin-bottom:2px;
+  height:50px;border-radius:9px;margin-bottom:3px;
   background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);
   background-size:200% 100%;animation:shimmer 1.3s infinite;
 }
@@ -298,11 +320,11 @@ header {
 
 /* playlist tab */
 .pl-item{
-  display:flex;align-items:center;gap:9px;padding:9px 10px;
-  border-radius:9px;border:1px solid var(--border);margin-bottom:5px;
+  display:flex;align-items:center;gap:9px;padding:10px 11px;
+  border-radius:10px;border:1px solid var(--border);margin-bottom:6px;
   background:var(--bg3);cursor:pointer;transition:all var(--trans);
 }
-.pl-item.on{border-color:var(--accent);background:rgba(230,57,70,.07)}
+.pl-item.on{border-color:var(--accent);background:rgba(230,57,70,.07);box-shadow:0 0 0 1px rgba(230,57,70,.15)}
 .pl-item:hover:not(.on){border-color:var(--border2);background:var(--bg4)}
 .pl-name{font-size:12.5px;font-weight:700;color:var(--text)}
 .pl-count{font-size:10.5px;color:var(--text2);margin-top:2px;font-weight:500}
@@ -328,45 +350,89 @@ header {
 .player-wrap{
   position:relative;background:#000;flex-shrink:0;
   aspect-ratio:16/9;width:100%;
-  max-height:calc(100dvh - var(--header-h) - 118px);
+  max-height:calc(100dvh - var(--header-h) - 122px);
   overflow:hidden;
 }
 
-#video{width:100%;height:100%;display:block;background:#000;outline:none}
+#video{
+  width:100%;height:100%;display:block;background:#000;outline:none;
+  /* Ensure native controls look good on mobile */
+}
 
 /* overlay when nothing playing */
 .player-overlay{
   position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:8px;
-  background:linear-gradient(135deg,#060810 0%,#0c1020 100%);pointer-events:none;
+  align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(135deg,#060810 0%,#0d1120 50%,#060810 100%);pointer-events:none;
 }
 .player-overlay.off{display:none}
 .ov-logo{
-  font-family:'Teko',sans-serif;font-size:52px;font-weight:700;letter-spacing:4px;
-  color:rgba(255,255,255,.06);
+  font-family:'Teko',sans-serif;font-size:54px;font-weight:700;letter-spacing:4px;
+  color:rgba(255,255,255,.055);
 }
-.ov-logo span{color:rgba(230,57,70,.2)}
-.ov-msg{color:rgba(255,255,255,.25);font-size:12px}
+.ov-logo span{color:rgba(230,57,70,.18)}
+.ov-icon{font-size:38px;opacity:.18;margin-bottom:4px}
+.ov-msg{color:rgba(255,255,255,.22);font-size:12.5px;font-weight:500}
 
 /* gradient overlays on video */
 .vd-grad-top{
-  position:absolute;top:0;left:0;right:0;height:70px;pointer-events:none;z-index:2;
-  background:linear-gradient(to bottom,rgba(0,0,0,.7) 0%,transparent 100%);
+  position:absolute;top:0;left:0;right:0;height:80px;pointer-events:none;z-index:2;
+  background:linear-gradient(to bottom,rgba(0,0,0,.75) 0%,transparent 100%);
   opacity:0;transition:opacity .3s;
 }
 .vd-grad-bot{
-  position:absolute;bottom:0;left:0;right:0;height:80px;pointer-events:none;z-index:2;
-  background:linear-gradient(to top,rgba(0,0,0,.8) 0%,transparent 100%);
+  position:absolute;bottom:0;left:0;right:0;height:90px;pointer-events:none;z-index:2;
+  background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 100%);
 }
 .player-wrap:hover .vd-grad-top{opacity:1}
 
 .vid-topbar{
   position:absolute;top:0;left:0;right:0;z-index:3;
-  padding:10px 12px;display:flex;align-items:center;gap:8px;
+  padding:11px 14px;display:flex;align-items:center;gap:8px;
   opacity:0;transition:opacity .3s;
 }
 .player-wrap:hover .vid-topbar{opacity:1}
-.vid-name{font-size:13.5px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.vid-name{font-size:13.5px;font-weight:700;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.7);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Fullscreen button on player */
+.player-fs-btn{
+  position:absolute;bottom:12px;right:12px;z-index:10;
+  background:rgba(0,0,0,.5);border:1.5px solid rgba(255,255,255,.2);
+  color:#fff;width:34px;height:34px;border-radius:8px;
+  cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;backdrop-filter:blur(4px);opacity:0;
+}
+.player-wrap:hover .player-fs-btn{opacity:1}
+.player-fs-btn:hover{background:rgba(230,57,70,.7);border-color:transparent}
+
+/* Video error overlay */
+.vid-error{
+  display:none;position:absolute;inset:0;
+  background:rgba(6,8,16,.9);z-index:20;
+  flex-direction:column;align-items:center;justify-content:center;gap:10px;
+}
+.vid-error.show{display:flex}
+.vid-error-icon{font-size:36px;opacity:.6}
+.vid-error-msg{color:rgba(255,255,255,.55);font-size:12.5px;text-align:center;padding:0 20px;line-height:1.6}
+.vid-retry-btn{
+  background:var(--accent);color:#fff;border:none;padding:7px 18px;
+  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:'Hind Siliguri',sans-serif;transition:all var(--trans);margin-top:4px;
+}
+.vid-retry-btn:hover{background:var(--accent2)}
+
+/* Video buffering overlay */
+.vid-buffer{
+  display:none;position:absolute;inset:0;
+  background:rgba(0,0,0,.35);z-index:15;
+  align-items:center;justify-content:center;pointer-events:none;
+}
+.vid-buffer.show{display:flex}
+.buf-spinner{
+  width:44px;height:44px;border:3px solid rgba(255,255,255,.15);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin .7s linear infinite;
+}
 
 /* channel info bottom left */
 .vd-info{
@@ -374,39 +440,44 @@ header {
   opacity:0;transition:opacity .3s;
 }
 .player-wrap:hover .vd-info{opacity:1}
-.vd-title{font-size:16px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.7)}
-.vd-meta{font-size:11px;color:rgba(255,255,255,.7);margin-top:3px}
+.vd-title{font-size:15px;font-weight:700;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.vd-meta{font-size:11px;color:rgba(255,255,255,.65);margin-top:3px}
 
 /* ═══════════════════════════════════════
    ACTIONS BAR
 ═══════════════════════════════════════ */
 .actions{
   display:flex;align-items:center;gap:6px;flex-shrink:0;
-  padding:6px 10px;background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:7px 11px;background:var(--bg2);border-bottom:1px solid var(--border);
+  flex-wrap:nowrap;
 }
 .act-btn{
   display:flex;align-items:center;gap:4px;
   background:var(--bg3);border:1px solid var(--border2);
-  color:var(--text2);padding:5px 10px;border-radius:7px;
+  color:var(--text2);padding:6px 10px;border-radius:8px;
   font-size:11.5px;font-weight:600;cursor:pointer;
   font-family:'Hind Siliguri',sans-serif;transition:all var(--trans);white-space:nowrap;
+  flex-shrink:0;
 }
 .act-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--text3)}
-.act-btn:active{transform:scale(.96)}
+.act-btn:active{transform:scale(.95)}
 .nav-btn{background:rgba(230,57,70,.1);border-color:rgba(230,57,70,.3);color:var(--accent)}
 .nav-btn:hover{background:rgba(230,57,70,.2);border-color:rgba(230,57,70,.5)}
 
 .vol-wrap{
   display:flex;align-items:center;gap:5px;
   background:var(--bg3);border:1px solid var(--border2);
-  border-radius:7px;padding:4px 9px;
+  border-radius:8px;padding:4px 10px;flex-shrink:0;
 }
-.vol-icon{font-size:12px;cursor:pointer;user-select:none}
+.vol-icon{font-size:13px;cursor:pointer;user-select:none;transition:transform .1s}
+.vol-icon:active{transform:scale(.85)}
 #volSlider{
-  width:68px;height:3px;accent-color:var(--accent);cursor:pointer;
+  width:70px;height:3px;accent-color:var(--accent);cursor:pointer;
   border-radius:2px;vertical-align:middle;
 }
-.vol-pct{font-size:10.5px;color:var(--text2);min-width:26px;font-weight:600;font-family:monospace}
+.vol-pct{font-size:10.5px;color:var(--text2);min-width:28px;font-weight:600;font-family:monospace}
+
+.hdr-gap2{flex:1}
 
 /* ═══════════════════════════════════════
    STATS
@@ -422,7 +493,7 @@ header {
 }
 .stat:last-child{border-right:none}
 .stat-n{
-  font-family:'Teko',sans-serif;font-size:20px;
+  font-family:'Teko',sans-serif;font-size:21px;
   font-weight:600;color:var(--accent);line-height:1;
 }
 .stat-l{font-size:9.5px;color:var(--text2);margin-top:1px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
@@ -432,7 +503,7 @@ header {
 ═══════════════════════════════════════ */
 .kb{
   background:var(--bg2);border-top:1px solid var(--border);
-  padding:6px 10px;flex-shrink:0;
+  padding:6px 12px;flex-shrink:0;
   display:flex;flex-wrap:wrap;gap:4px;align-items:center;
 }
 .kb-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.5px;margin-right:2px}
@@ -457,60 +528,62 @@ footer a:hover{color:var(--accent2)}
    MODAL
 ═══════════════════════════════════════ */
 .overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;
+  position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;
   display:flex;align-items:center;justify-content:center;
-  backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .2s;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  opacity:0;pointer-events:none;transition:opacity .22s;
 }
 .overlay.show{opacity:1;pointer-events:all}
 .modal{
-  background:var(--bg2);border:1px solid var(--border2);border-radius:14px;
-  padding:22px;width:440px;max-width:94vw;
-  transform:translateY(16px);transition:transform .2s;
-  box-shadow:0 24px 64px var(--shadow);
+  background:var(--bg2);border:1px solid var(--border2);border-radius:16px;
+  padding:24px;width:440px;max-width:94vw;
+  transform:translateY(18px) scale(.98);transition:transform .22s;
+  box-shadow:0 28px 70px var(--shadow);
 }
-.overlay.show .modal{transform:translateY(0)}
-.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.modal-title{font-family:'Teko',sans-serif;font-size:20px;font-weight:700;letter-spacing:1px;color:var(--text)}
+.overlay.show .modal{transform:translateY(0) scale(1)}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-title{font-family:'Teko',sans-serif;font-size:21px;font-weight:700;letter-spacing:1px;color:var(--text)}
 .modal-x{
   background:none;border:none;color:var(--text2);font-size:19px;cursor:pointer;
-  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
-  border-radius:6px;transition:all var(--trans);
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  border-radius:7px;transition:all var(--trans);
 }
 .modal-x:hover{background:var(--bg3);color:var(--text)}
 .drop-zone{
-  border:2px dashed var(--border2);border-radius:10px;padding:24px;
-  text-align:center;cursor:pointer;transition:all var(--trans);margin-bottom:12px;
+  border:2px dashed var(--border2);border-radius:12px;padding:26px;
+  text-align:center;cursor:pointer;transition:all var(--trans);margin-bottom:14px;
   color:var(--text2);font-size:12.5px;
 }
 .drop-zone:hover,.drop-zone.drag{border-color:var(--accent);background:rgba(230,57,70,.06);color:var(--text)}
-.drop-icon{font-size:28px;margin-bottom:6px;opacity:.6}
+.drop-icon{font-size:30px;margin-bottom:8px;opacity:.65}
 .divider{
-  text-align:center;color:var(--text3);font-size:11px;margin:10px 0;position:relative;
+  text-align:center;color:var(--text3);font-size:11px;margin:12px 0;position:relative;
 }
 .divider::before,.divider::after{
   content:'';position:absolute;top:50%;width:43%;height:1px;background:var(--border);
 }
 .divider::before{left:0}.divider::after{right:0}
 .m-input{
-  width:100%;background:var(--input-bg);border:1.5px solid var(--border);border-radius:8px;
-  padding:9px 12px;color:var(--text);font-size:12.5px;
+  width:100%;background:var(--input-bg);border:1.5px solid var(--border);border-radius:9px;
+  padding:10px 13px;color:var(--text);font-size:12.5px;
   font-family:'Hind Siliguri',sans-serif;outline:none;
-  transition:border-color var(--trans);margin-bottom:9px;
+  transition:border-color var(--trans), box-shadow var(--trans);margin-bottom:10px;
 }
-.m-input:focus{border-color:var(--accent)}
+.m-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(230,57,70,.1)}
 .m-input::placeholder{color:var(--text3)}
 .m-check{
-  display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2);
-  margin-bottom:12px;cursor:pointer;
+  display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);
+  margin-bottom:14px;cursor:pointer;
 }
-.m-check input{accent-color:var(--accent);width:14px;height:14px;cursor:pointer}
+.m-check input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
 .btn-load{
-  width:100%;background:var(--accent);color:#fff;border:none;padding:10px;
-  border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;
+  width:100%;background:var(--accent);color:#fff;border:none;padding:11px;
+  border-radius:9px;font-size:13.5px;font-weight:700;cursor:pointer;
   font-family:'Hind Siliguri',sans-serif;transition:all var(--trans);
+  box-shadow:0 3px 12px rgba(230,57,70,.3);
 }
-.btn-load:hover{background:var(--accent2)}
-.btn-load:disabled{opacity:.45;cursor:not-allowed}
+.btn-load:hover{background:var(--accent2);box-shadow:0 5px 20px rgba(230,57,70,.4)}
+.btn-load:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
 #fileInput{display:none}
 
 /* ═══════════════════════════════════════
@@ -518,12 +591,12 @@ footer a:hover{color:var(--accent2)}
 ═══════════════════════════════════════ */
 .ctx{
   position:fixed;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:10px;padding:5px;z-index:500;min-width:162px;
-  box-shadow:0 12px 40px var(--shadow);display:none;
+  border-radius:11px;padding:5px;z-index:500;min-width:168px;
+  box-shadow:0 14px 44px var(--shadow);display:none;
 }
 .ctx.show{display:block}
 .ctx-i{
-  display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:6px;
+  display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:7px;
   cursor:pointer;font-size:12.5px;color:var(--text2);font-weight:500;transition:all var(--trans);
 }
 .ctx-i:hover{background:var(--bg5);color:var(--text)}
@@ -533,12 +606,13 @@ footer a:hover{color:var(--accent2)}
    TOAST
 ═══════════════════════════════════════ */
 .toast{
-  position:fixed;bottom:18px;right:16px;
+  position:fixed;bottom:20px;right:16px;
   background:var(--bg3);border:1px solid var(--border2);
-  border-radius:9px;padding:9px 14px;font-size:12.5px;
+  border-radius:10px;padding:10px 16px;font-size:12.5px;
   color:var(--text);z-index:9999;
-  transform:translateY(56px);opacity:0;transition:all .28s;
-  max-width:260px;box-shadow:0 8px 28px var(--shadow);font-weight:500;
+  transform:translateY(60px);opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);
+  max-width:280px;box-shadow:0 10px 32px var(--shadow);font-weight:500;
+  pointer-events:none;
 }
 .toast.show{transform:translateY(0);opacity:1}
 .toast.ok{border-left:3px solid var(--green)}
@@ -555,7 +629,7 @@ footer a:hover{color:var(--accent2)}
 ═══════════════════════════════════════ */
 @media(max-width:900px){
   :root{--sidebar-w:250px}
-  .dev-link{display:none}
+  .kb{flex-wrap:nowrap;overflow-x:auto}
 }
 
 /* ═══════════════════════════════════════
@@ -564,53 +638,68 @@ footer a:hover{color:var(--accent2)}
 @media(max-width:700px){
   body{overflow:hidden;height:100dvh}
 
-  /* stack layout */
+  /* stack layout — video on top, playlist below */
   .main{flex-direction:column;overflow:hidden}
 
-  /* sidebar becomes top panel */
+  /* content (video) comes first — fixed height based on video */
+  .content{order:1;flex-shrink:0;overflow:hidden;display:flex;flex-direction:column}
+
+  /* sidebar (playlist) goes below, fills remaining space */
   .sidebar{
-    width:100%;height:38vh;min-height:220px;max-height:280px;
-    border-right:none;border-bottom:1px solid var(--border);
+    order:2;
+    width:100%;flex:1;min-height:0;
+    border-right:none;border-top:1px solid var(--border);
+    overflow:hidden;
   }
 
-  /* hide group filter pills on mobile to save space */
+  /* hide group filter pills on mobile */
   .group-bar{display:none}
 
-  /* content fills rest */
-  .content{flex:1;min-height:0;overflow:hidden}
-
-  /* player 16:9 but capped */
+  /* player fills intelligently on mobile */
   .player-wrap{
     max-height:none;
     height:auto;
     aspect-ratio:16/9;
     width:100%;
+    flex-shrink:0;
   }
 
-  /* hide vol on mobile */
+  /* Better mobile fullscreen */
+  .player-fs-btn{
+    opacity:1 !important;
+    width:36px;height:36px;
+    bottom:10px;right:10px;
+  }
+
+  /* hide vol on mobile (in actions bar) */
   .vol-wrap{display:none}
 
   /* compact actions */
-  .actions{padding:5px 7px;gap:4px;flex-wrap:nowrap;overflow-x:auto}
-  .act-btn{padding:5px 8px;font-size:11px;white-space:nowrap}
-  .act-btn span.label{display:none} /* hide text labels, keep icons */
+  .actions{
+    padding:5px 8px;gap:4px;flex-wrap:nowrap;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;flex-shrink:0;
+  }
+  .actions::-webkit-scrollbar{height:0}
+  .act-btn{padding:5px 9px;font-size:11px;white-space:nowrap;min-height:32px}
+  .act-btn span.label{display:none}
 
   /* stats smaller */
   .stats{flex-shrink:0}
   .stat{padding:5px 2px}
-  .stat-n{font-size:16px}
+  .stat-n{font-size:17px}
   .stat-l{font-size:8.5px}
 
   /* hide KB shortcuts on mobile */
   .kb{display:none}
 
   /* footer shorter */
-  footer{padding:4px 10px}
+  footer{padding:4px 10px;font-size:10px}
 
   /* header compact */
-  header{padding:0 10px;gap:6px}
+  header{padding:0 10px;gap:6px;height:52px}
+  --header-h:52px;
   .logo-net{display:none}
-  .btn-add{font-size:11.5px;padding:5px 9px}
+  .btn-add{font-size:11.5px;padding:6px 10px}
 
   /* bottom nav */
   .mobile-nav{
@@ -618,17 +707,57 @@ footer a:hover{color:var(--accent2)}
     background:var(--bg2);border-top:1px solid var(--border);
     z-index:999;padding:6px 0 calc(6px + env(safe-area-inset-bottom));
     justify-content:space-around;
+    box-shadow:0 -4px 20px var(--shadow);
   }
   .mobile-nav button{
     background:none;border:none;color:var(--text3);
-    font-size:11px;padding:4px 8px;border-radius:8px;
+    font-size:10.5px;padding:4px 10px;border-radius:9px;
     transition:all var(--trans);font-family:'Hind Siliguri',sans-serif;
-    display:flex;flex-direction:column;align-items:center;gap:1px;font-weight:600;
-    cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:600;
+    cursor:pointer;min-width:48px;
   }
-  .mobile-nav button .mnav-icon{font-size:17px;line-height:1}
+  .mobile-nav button .mnav-icon{font-size:18px;line-height:1}
   .mobile-nav button.on{color:var(--accent)}
   body{padding-bottom:calc(58px + env(safe-area-inset-bottom))}
+
+  /* Mobile video touch controls hint */
+  .vid-buffer .buf-spinner{width:36px;height:36px}
+}
+
+/* ═══════════════════════════════════════
+   FULLSCREEN STYLES
+═══════════════════════════════════════ */
+:fullscreen .player-wrap,
+:-webkit-full-screen .player-wrap,
+:-moz-full-screen .player-wrap {
+  width:100vw!important;height:100vh!important;
+  max-height:100vh!important;aspect-ratio:unset!important;
+}
+:fullscreen #video,
+:-webkit-full-screen #video {
+  width:100%!important;height:100%!important;object-fit:contain;
+}
+:fullscreen .player-fs-btn,
+:-webkit-full-screen .player-fs-btn {
+  opacity:1!important;
+}
+
+/* ═══════════════════════════════════════
+   PINCH ZOOM CONTAINER
+═══════════════════════════════════════ */
+.video-zoom-wrap{
+  width:100%;height:100%;overflow:hidden;position:absolute;inset:0;
+}
+#video{
+  transform-origin:center center;
+  touch-action:pinch-zoom;
+}
+
+/* Extra small mobile adjustments */
+@media(max-width:380px){
+  .act-btn{padding:5px 7px;font-size:10.5px}
+  .stat-n{font-size:15px}
+  header{padding:0 8px;gap:5px}
 }
 </style>
 </head>
@@ -638,7 +767,13 @@ footer a:hover{color:var(--accent2)}
 
 <!-- ═══ HEADER ═══ -->
 <header>
-  <div class="logo"><span class="f">F</span><span class="logo-net">ARABI NETWORK</span></div>
+  <!-- Logo with icon + text -->
+  <a class="logo" href="#" onclick="return false;" title="Farabi Network">
+    <div class="logo-icon">F</div>
+    <div class="logo-text">
+      <span class="f">ARABI</span><span class="logo-net">&nbsp;NETWORK</span>
+    </div>
+  </a>
   <div class="live-pill">LIVE</div>
   <div class="load-indicator" id="loadInd" style="display:none">
     <div class="spinner"></div>
@@ -647,7 +782,6 @@ footer a:hover{color:var(--accent2)}
   <div class="hdr-gap"></div>
   <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="Theme (T)">🌙</button>
   <button class="btn-add" onclick="openModal()">＋ Playlist</button>
-  <a class="dev-link" href="https://www.facebook.com/farabiahmedshakil11" target="_blank">Developer</a>
 </header>
 
 <!-- ═══ MAIN ═══ -->
@@ -685,9 +819,30 @@ footer a:hover{color:var(--accent2)}
 
     <!-- player -->
     <div class="player-wrap" id="playerWrap" oncontextmenu="showCtx(event)">
-      <video id="video" controls playsinline></video>
+      <!-- Zoom wrapper for pinch zoom on mobile -->
+      <div class="video-zoom-wrap" id="videoZoomWrap">
+        <video id="video" controls playsinline
+          webkit-playsinline
+          x5-playsinline
+          x5-video-player-fullscreen="true"
+          x5-video-orientation="landscape"
+        ></video>
+      </div>
+
+      <!-- Buffering spinner -->
+      <div class="vid-buffer" id="vidBuffer">
+        <div class="buf-spinner"></div>
+      </div>
+
+      <!-- Error overlay -->
+      <div class="vid-error" id="vidError">
+        <div class="vid-error-icon">📡</div>
+        <div class="vid-error-msg">স্ট্রিম লোড হয়নি।<br>সংযোগ পরীক্ষা করুন বা অন্য চ্যানেল বেছে নিন।</div>
+        <button class="vid-retry-btn" onclick="retryPlay()">পুনরায় চেষ্টা করুন</button>
+      </div>
 
       <div class="player-overlay" id="ov">
+        <div class="ov-icon">📺</div>
         <div class="ov-logo"><span>F</span>ARABI NETWORK</div>
         <div class="ov-msg">একটি চ্যানেল বা মুভি সিলেক্ট করুন</div>
       </div>
@@ -700,13 +855,16 @@ footer a:hover{color:var(--accent2)}
         <div class="vid-name" id="vName">—</div>
         <div class="live-pill" id="vLiveBadge" style="display:none">LIVE</div>
         <div style="flex:1"></div>
-        <div style="font-family:Teko,sans-serif;font-size:15px;letter-spacing:2px;color:rgba(255,255,255,.3)">FARABI NETWORK</div>
+        <div style="font-family:Teko,sans-serif;font-size:14px;letter-spacing:2px;color:rgba(255,255,255,.22)">FARABI NETWORK</div>
       </div>
 
       <div class="vd-info">
         <div class="vd-title" id="nfTitle"></div>
         <div class="vd-meta" id="nfMeta"></div>
       </div>
+
+      <!-- Fullscreen button -->
+      <button class="player-fs-btn" id="playerFsBtn" onclick="toggleFullscreen()" title="Fullscreen (F)">⛶</button>
     </div>
 
     <!-- actions -->
@@ -715,14 +873,14 @@ footer a:hover{color:var(--accent2)}
       <button class="act-btn" onclick="doCopy()" title="URL কপি (C)">🔗 <span class="label">কপি</span></button>
       <button class="act-btn" onclick="doNewTab()" title="নতুন ট্যাব">🔲 <span class="label">নতুন ট্যাব</span></button>
       <button class="act-btn" onclick="doPiP()" title="Picture-in-Picture (I)">⧉ <span class="label">PiP</span></button>
-      <div style="flex:1"></div>
+      <div class="hdr-gap2"></div>
       <div class="vol-wrap">
         <span class="vol-icon" id="volIcon" onclick="toggleMute()" title="Mute (M)">🔊</span>
         <input type="range" id="volSlider" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)">
         <span class="vol-pct" id="volPct">100%</span>
       </div>
-      <button class="act-btn nav-btn" onclick="prevCh()" title="আগের চ্যানেল (P)">⏮ Prev</button>
-      <button class="act-btn nav-btn" onclick="nextCh()" title="পরের চ্যানেল (N)">Next ⏭</button>
+      <button class="act-btn nav-btn" onclick="prevCh()" title="আগের চ্যানেল (P)">⏮ <span class="label">Prev</span></button>
+      <button class="act-btn nav-btn" onclick="nextCh()" title="পরের চ্যানেল (N)"><span class="label">Next</span> ⏭</button>
     </div>
 
     <!-- stats -->
@@ -748,7 +906,7 @@ footer a:hover{color:var(--accent2)}
       <div class="kb-i"><kbd>I</kbd> PiP</div>
     </div>
 
-    <footer>FARABI NETWORK — Developed by <a href="https://www.facebook.com/farabiahmedshakil11" target="_blank">Farabi Ahmed Shakil</a></footer>
+    <footer>FARABI NETWORK — Developed by <a href="https://www.facebook.com/farabiahmedshakil11" target="_blank" rel="noopener">Farabi Ahmed Shakil</a></footer>
   </div>
 </div>
 
@@ -766,7 +924,7 @@ footer a:hover{color:var(--accent2)}
     </div>
     <input type="file" id="fileInput" accept=".m3u,.m3u8" onchange="loadFile(event)">
     <div class="divider">অথবা URL দিন</div>
-    <input class="m-input" id="urlIn" type="url" placeholder="https://example.com/playlist.m3u8">
+    <input class="m-input" id="urlIn" type="url" placeholder="https://example.com/playlist.m3u8 বা MP4/M3U8 লিংক">
     <input class="m-input" id="plName" type="text" placeholder="Playlist নাম (ঐচ্ছিক)">
     <label class="m-check">
       <input type="checkbox" id="makeDefault">
@@ -808,7 +966,7 @@ footer a:hover{color:var(--accent2)}
   </button>
 </nav>
 
-<!-- JS -->
+<!-- HLS.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
 <script>
 'use strict';
@@ -836,6 +994,8 @@ const S = {
   curIdx:   -1,
   tab:      'all',
   hlsInst:  null,
+  lastUrl:  null,
+  retryCount: 0,
 };
 
 // ─────────────────────────────────────────
@@ -843,6 +1003,8 @@ const S = {
 // ─────────────────────────────────────────
 window.addEventListener('load', async () => {
   applyTheme(S.theme);
+  setupVideoEvents();
+  setupPinchZoom();
   if (!S.pls.length) {
     await loadDefaultPlaylists();
   } else {
@@ -852,6 +1014,99 @@ window.addEventListener('load', async () => {
   updateStats();
   renderPlTab();
 });
+
+// ─────────────────────────────────────────
+// VIDEO EVENTS — buffering, errors
+// ─────────────────────────────────────────
+function setupVideoEvents() {
+  const video = $('video');
+  const buf   = $('vidBuffer');
+  const err   = $('vidError');
+
+  video.addEventListener('waiting',  () => buf.classList.add('show'));
+  video.addEventListener('playing',  () => { buf.classList.remove('show'); err.classList.remove('show'); });
+  video.addEventListener('canplay',  () => buf.classList.remove('show'));
+  video.addEventListener('error',    () => {
+    buf.classList.remove('show');
+    // Only show error if we actually had a src set
+    if (video.src && video.src !== window.location.href) {
+      err.classList.add('show');
+    }
+  });
+  video.addEventListener('stalled',  () => buf.classList.add('show'));
+  video.addEventListener('loadstart',() => { err.classList.remove('show'); });
+
+  // Fullscreen change event — update button icon
+  const fsEvents = ['fullscreenchange','webkitfullscreenchange','mozfullscreenchange'];
+  fsEvents.forEach(ev => document.addEventListener(ev, syncFsBtn));
+}
+
+function syncFsBtn() {
+  const btn = $('playerFsBtn');
+  if (!btn) return;
+  const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+  btn.textContent = isFs ? '⛶' : '⛶';
+  btn.title = isFs ? 'Exit Fullscreen (F)' : 'Fullscreen (F)';
+}
+
+function retryPlay() {
+  const video = $('video');
+  $('vidError').classList.remove('show');
+  if (S.lastUrl) {
+    S.retryCount++;
+    if (S.retryCount > 3) { showToast('বারবার ব্যর্থ। চ্যানেল পরিবর্তন করুন।','err'); return; }
+    playUrl(S.lastUrl);
+  }
+}
+
+// ─────────────────────────────────────────
+// PINCH ZOOM (mobile)
+// ─────────────────────────────────────────
+function setupPinchZoom() {
+  const video = $('video');
+  let scale = 1, startDist = 0, lastScale = 1;
+
+  video.addEventListener('touchstart', e => {
+    if (e.touches.length === 2) {
+      startDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+    }
+  }, { passive: true });
+
+  video.addEventListener('touchmove', e => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      scale = Math.min(Math.max(lastScale * (dist / startDist), 1), 4);
+      video.style.transform = `scale(${scale})`;
+    }
+  }, { passive: false });
+
+  video.addEventListener('touchend', e => {
+    if (e.touches.length < 2) lastScale = scale;
+    if (scale <= 1.05) {
+      scale = 1; lastScale = 1;
+      video.style.transform = '';
+    }
+  }, { passive: true });
+
+  // Double-tap to reset zoom
+  let lastTap = 0;
+  video.addEventListener('touchend', e => {
+    if (e.touches.length > 0) return;
+    const now = Date.now();
+    if (now - lastTap < 300) {
+      scale = 1; lastScale = 1;
+      video.style.transform = '';
+    }
+    lastTap = now;
+  }, { passive: true });
+}
 
 // ─────────────────────────────────────────
 // LOAD DEFAULTS
@@ -983,7 +1238,7 @@ function buildGroups() {
   for (const ch of S.channels) {
     const g = ch.group||''; if (g && !seen.has(g)) { seen.add(g); groups.push(g); }
   }
-  S.groups = groups.slice(0, 30); // top 30 groups
+  S.groups = groups.slice(0, 30);
   renderGroupBar();
 }
 
@@ -994,9 +1249,7 @@ function renderGroupBar() {
     + S.groups.map(g=>`<button class="gpill ${S.activeGroup===g?'on':''}" onclick="setGroup('${esc(g)}')">${esc(g)}</button>`).join('');
 }
 
-function setGroup(g) {
-  S.activeGroup = g; renderGroupBar(); doFilter();
-}
+function setGroup(g) { S.activeGroup = g; renderGroupBar(); doFilter(); }
 
 // ─────────────────────────────────────────
 // MODAL
@@ -1021,6 +1274,14 @@ function readFile(f){
 async function loadURL() {
   const url = $('urlIn').value.trim();
   if (!url) { showToast('URL দিন','err'); return; }
+
+  // Direct video URL — play immediately without treating as a playlist
+  if (/\.(mp4|mkv|avi|mov|webm|ts|flv|wmv|ogg)($|\?)/i.test(url)) {
+    const name = $('plName').value || 'Direct Video';
+    parseAndAdd(`#EXTM3U\n#EXTINF:-1,${name}\n${url}`, name, url, $('makeDefault').checked);
+    return;
+  }
+
   const btn = $('btnLoad'); btn.disabled=true; btn.textContent='লোড হচ্ছে…';
   try {
     const text = await fetchM3U(url);
@@ -1082,15 +1343,12 @@ function _filter() {
   const q = $('srch').value.trim().toLowerCase();
   let list = S.channels;
 
-  // tab filter
   if      (S.tab==='live')  list = list.filter(c=>c.type==='live');
   else if (S.tab==='movie') list = list.filter(c=>c.type==='movie');
   else if (S.tab==='fav')   list = list.filter(c=>S.favs.includes(c.url));
 
-  // group filter
   if (S.activeGroup !== 'all') list = list.filter(c=>c.group===S.activeGroup);
 
-  // search
   if (q) {
     list = list.filter(c=>
       (c.name||'').toLowerCase().includes(q) ||
@@ -1104,14 +1362,13 @@ function _filter() {
 }
 
 function updateChCount() {
-  const el = $('chCount');
-  if (!el) return;
+  const el = $('chCount'); if (!el) return;
   const n = S.filtered.length, t = S.channels.length;
   el.textContent = n===t ? `${t} চ্যানেল` : `${n} / ${t} চ্যানেল`;
 }
 
 // ─────────────────────────────────────────
-// RENDER CHANNEL LIST  (virtual: max 350)
+// RENDER CHANNEL LIST (virtual: max 350)
 // ─────────────────────────────────────────
 function showSkeleton() {
   $('chList').innerHTML =
@@ -1167,8 +1424,72 @@ function renderPlTab() {
 }
 
 // ─────────────────────────────────────────
-// PLAYER
+// PLAYER — upgraded with FTP / MP4 / M3U8 / any URL
 // ─────────────────────────────────────────
+function playUrl(url) {
+  const video = $('video');
+  S.lastUrl = url;
+  S.retryCount = 0;
+  $('vidError').classList.remove('show');
+  $('vidBuffer').classList.add('show');
+
+  if (S.hlsInst){ S.hlsInst.destroy(); S.hlsInst=null; }
+
+  // Detect stream type
+  const isHLS  = /\.m3u8?($|\?)/i.test(url) || url.includes('.m3u8') || url.includes('.m3u');
+  const isDASH = /\.mpd($|\?)/i.test(url);
+  const isFTP  = /^ftp:\/\//i.test(url);
+
+  // FTP: try to pass directly (browser may handle, otherwise show toast)
+  if (isFTP) {
+    showToast('FTP লিংক চেষ্টা করা হচ্ছে…','info');
+    video.src = url;
+    video.load();
+    video.play().catch(()=>{ $('vidError').classList.add('show'); });
+    return;
+  }
+
+  if (isHLS && typeof Hls!=='undefined' && Hls.isSupported()) {
+    const hls = new Hls({
+      enableWorker: true,
+      lowLatencyMode: true,
+      maxBufferLength: 30,
+      maxMaxBufferLength: 60,
+      fragLoadingTimeOut: 20000,
+      manifestLoadingTimeOut: 15000,
+    });
+    S.hlsInst = hls;
+    hls.loadSource(url);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      video.play().catch(()=>{});
+    });
+    hls.on(Hls.Events.ERROR, (_, d) => {
+      if (d.fatal) {
+        if (d.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          hls.startLoad();
+        } else if (d.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          hls.recoverMediaError();
+        } else {
+          $('vidBuffer').classList.remove('show');
+          $('vidError').classList.add('show');
+          showToast('স্ট্রিম এরর','err');
+        }
+      }
+    });
+  } else if (isHLS && video.canPlayType('application/vnd.apple.mpegurl')) {
+    // Safari native HLS
+    video.src = url;
+    video.load();
+    video.play().catch(()=>{});
+  } else {
+    // Direct MP4, FLV, TS, WebM, or any other URL
+    video.src = url;
+    video.load();
+    video.play().catch(()=>{});
+  }
+}
+
 function playCh(ch) {
   const video = $('video'), ov=$('ov');
   ov.classList.add('off');
@@ -1179,21 +1500,31 @@ function playCh(ch) {
   $('vLiveDot').style.display  = ch.type==='live'?'block':'none';
   $('vLiveBadge').style.display= ch.type==='live'?'flex':'none';
 
-  if (S.hlsInst){ S.hlsInst.destroy(); S.hlsInst=null; }
-  const url=ch.url;
-  const isHLS = /\.m3u8?($|\?)/i.test(url) || url.includes('.m3u8') || url.includes('.m3u');
+  playUrl(ch.url);
+  document.title = ch.name + ' — Farabi Network';
+}
 
-  if (isHLS && typeof Hls!=='undefined' && Hls.isSupported()) {
-    const hls = new Hls({ enableWorker:true, lowLatencyMode:true, maxBufferLength:30 });
-    S.hlsInst = hls;
-    hls.loadSource(url);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, ()=>video.play().catch(()=>{}));
-    hls.on(Hls.Events.ERROR, (_,d)=>{ if(d.fatal) showToast('স্ট্রিম এরর','err'); });
+// ─────────────────────────────────────────
+// FULLSCREEN (cross-browser + mobile)
+// ─────────────────────────────────────────
+function toggleFullscreen() {
+  const pw = $('playerWrap');
+  const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+
+  if (isFs) {
+    (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || function(){}).call(document);
   } else {
-    video.src=url; video.play().catch(()=>{});
+    const reqFs = pw.requestFullscreen || pw.webkitRequestFullscreen || pw.mozRequestFullScreen || pw.msRequestFullscreen;
+    if (reqFs) {
+      reqFs.call(pw).catch(()=>{
+        // Fallback: try on video element directly (some mobile browsers)
+        const vReqFs = $('video').webkitEnterFullscreen || $('video').webkitRequestFullscreen;
+        if (vReqFs) vReqFs.call($('video'));
+      });
+    } else if ($('video').webkitEnterFullscreen) {
+      $('video').webkitEnterFullscreen();
+    }
   }
-  document.title = ch.name+' — Farabi Network';
 }
 
 // ─────────────────────────────────────────
@@ -1240,7 +1571,7 @@ function toggleFav(url) {
 // ─────────────────────────────────────────
 function getCurURL() { return S.filtered[S.curIdx]?.url||null; }
 function openVLC()   { const u=getCurURL(); if(!u){showToast('চ্যানেল সিলেক্ট করুন','err');return;} window.location.href='vlc://'+u; }
-function doCopy()    { const u=getCurURL(); if(!u){showToast('চ্যানেল সিলেক্ট করুন','err');return;} navigator.clipboard?.writeText(u).then(()=>showToast('URL কপি হয়েছে ✓','ok')); }
+function doCopy()    { const u=getCurURL(); if(!u){showToast('চ্যানেল সিলেক্ট করুন','err');return;} navigator.clipboard?.writeText(u).then(()=>showToast('URL কপি হয়েছে ✓','ok')).catch(()=>{showToast('কপি ব্যর্থ','err')}); }
 function doNewTab()  { const u=getCurURL(); if(!u){showToast('চ্যানেল সিলেক্ট করুন','err');return;} window.open(u,'_blank'); }
 
 // ─────────────────────────────────────────
@@ -1295,8 +1626,10 @@ function hideLoader()   { $('loadInd').style.display='none'; }
 function showCtx(e) {
   e.preventDefault();
   const m=$('ctxMenu'); m.classList.add('show');
-  m.style.left=Math.min(e.clientX,window.innerWidth-170)+'px';
-  m.style.top =Math.min(e.clientY,window.innerHeight-180)+'px';
+  const w=window.innerWidth, h=window.innerHeight;
+  const mw=172, mh=200;
+  m.style.left=Math.min(e.clientX, w-mw)+'px';
+  m.style.top =Math.min(e.clientY, h-mh)+'px';
 }
 document.addEventListener('click',()=>$('ctxMenu').classList.remove('show'));
 
@@ -1320,13 +1653,7 @@ document.addEventListener('keydown', e=>{
     case 'Space':
       e.preventDefault(); v.paused?v.play():v.pause(); break;
     case 'KeyF':
-      e.preventDefault();
-      if(document.fullscreenElement){ document.exitFullscreen?.(); }
-      else {
-        const pw=$('playerWrap');
-        (pw.requestFullscreen||pw.webkitRequestFullscreen||pw.mozRequestFullScreen||function(){}).call(pw);
-      }
-      break;
+      e.preventDefault(); toggleFullscreen(); break;
     case 'KeyM': toggleMute(); break;
     case 'ArrowUp':
       e.preventDefault(); v.volume=Math.min(1,+(v.volume+.1).toFixed(1)); syncVolUI(); break;
@@ -1347,14 +1674,26 @@ document.addEventListener('keydown', e=>{
   }
 });
 
-// touch swipe on player → next/prev
+// touch swipe on player → next/prev channel
 (()=>{
-  let tx=0;
+  let tx=0, ty=0, moved=false;
   const pw=$('playerWrap');
-  pw.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
-  pw.addEventListener('touchend',e=>{
+  pw.addEventListener('touchstart', e=>{
+    tx=e.touches[0].clientX;
+    ty=e.touches[0].clientY;
+    moved=false;
+  },{passive:true});
+  pw.addEventListener('touchmove', e=>{
+    if(Math.abs(e.touches[0].clientX-tx)>10) moved=true;
+  },{passive:true});
+  pw.addEventListener('touchend', e=>{
+    if(!moved) return;
     const dx=e.changedTouches[0].clientX-tx;
-    if(Math.abs(dx)>60){ dx<0?nextCh():prevCh(); }
+    const dy=e.changedTouches[0].clientY-ty;
+    // Only horizontal swipe
+    if(Math.abs(dx)>Math.abs(dy)*1.5 && Math.abs(dx)>60){
+      dx<0?nextCh():prevCh();
+    }
   },{passive:true});
 })();
 
