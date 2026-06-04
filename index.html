@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Farabi Network — লাইভ টিভি ও মুভি</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e63946">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --accent:    #e63946;
+  --accent2:   #ff5260;
+  --gold:      #f59e0b;
+  --green:     #22c55e;
+  --blue:      #3b82f6;
+  --header-h:  56px;
+  --sidebar-w: 292px;
+  --radius:    10px;
+  --trans:     .18s ease;
+}
+
+[data-theme="dark"] {
+  --bg:        #080a0f;
+  --bg2:       #0f1117;
+  --bg3:       #161b25;
+  --bg4:       #1d2333;
+  --bg5:       #242c40;
+  --border:    #1e2535;
+  --border2:   #2a3248;
+  --text:      #f0f3fc;
+  --text2:     #a8b3cc;
+  --text3:     #525e7a;
+  --input-bg:  #161b25;
+  --shadow:    rgba(0,0,0,.7);
+  --glow:      rgba(230,57,70,.18);
+}
+
+[data-theme="light"] {
+  --bg:        #eef0f6;
+  --bg2:       #ffffff;
+  --bg3:       #e8ecf5;
+  --bg4:       #dbe0ef;
+  --bg5:       #cdd4e8;
+  --border:    #d0d7ec;
+  --border2:   #b8c1da;
+  --text:      #0c1220;
+  --text2:     #28344f;
+  --text3:     #6878a0;
+  --input-bg:  #f6f8fd;
+  --shadow:    rgba(0,0,0,.10);
+  --glow:      rgba(230,57,70,.08);
+}
+
+/* ═══════════════════════════════════════
+   RESET + BASE
+═══════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-tap-highlight-color:transparent}
+
+body {
+  font-family:'Hind Siliguri',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  height:100dvh;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+/* smooth theme switch */
+body,header,.sidebar,.content,.actions,.stats,.kb,footer,
+.modal,.ctx,.ch-item,.tab,.act-btn,.pl-item,.search-input {
+  transition: background var(--trans), border-color var(--trans), color var(--trans);
+}
+
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+
+/* ═══════════════════════════════════════
+   PROGRESS BAR
+═══════════════════════════════════════ */
+.init-progress{
+  position:fixed;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  z-index:9999;transform:scaleX(0);transform-origin:left;
+  transition:transform .4s ease;border-radius:0 2px 2px 0;
+}
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+header {
+  height:var(--header-h);
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 12px;gap:8px;
+  flex-shrink:0;z-index:200;
+  box-shadow:0 1px 0 var(--border), 0 4px 20px var(--shadow);
+}
+
+.logo {
+  font-family:'Teko',sans-serif;
+  font-size:22px;font-weight:700;letter-spacing:1.5px;
+  color:var(--text);display:flex;align-items:center;gap:2px;flex-shrink:0;
+}
+.logo .f{color:var(--accent);font-size:28px;line-height:1}
+.logo-net{color:var(--text2);font-size:18px;font-weight:500;letter-spacing:2px}
+
+.live-pill{
+  background:var(--accent);color:#fff;
+  font-size:8px;font-weight:700;font-family:'Teko',sans-serif;letter-spacing:1.5px;
+  padding:2px 6px;border-radius:3px;animation:blink 2s infinite;flex-shrink:0;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.6}}
+
+.load-indicator{
+  display:flex;align-items:center;gap:6px;
+  font-size:11.5px;color:var(--text2);flex-shrink:0;
+}
+.spinner{
+  width:14px;height:14px;border:2px solid var(--border2);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin .6s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.hdr-gap{flex:1}
+
+.icon-btn{
+  background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text2);width:32px;height:32px;border-radius:8px;
+  cursor:pointer;font-size:15px;display:flex;align-items:center;
+  justify-content:center;transition:all var(--trans);flex-shrink:0;
+}
+.icon-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--text3)}
+
+.btn-add{
+  display:flex;align-items:center;gap:5px;
+  background:var(--accent);color:#fff;border:none;
+  padding:6px 12px;border-radius:7px;
+  font-family:'Hind Siliguri',sans-serif;font-size:12.5px;font-weight:600;
+  cursor:pointer;transition:all var(--trans);flex-shrink:0;white-space:nowrap;
+}
+.btn-add:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 14px var(--glow)}
+.btn-add:active{transform:translateY(0)}
+
+.dev-link{
+  color:var(--text3);font-size:11.5px;font-weight:600;text-decoration:none;
+  border:1px solid var(--border2);padding:5px 10px;border-radius:6px;
+  background:var(--bg3);transition:all var(--trans);flex-shrink:0;white-space:nowrap;
+  font-family:'Hind Siliguri',sans-serif;letter-spacing:.2px;
+}
+.dev-link:hover{color:var(--text);border-color:var(--text3);background:var(--bg4)}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════ */
+.main{display:flex;flex:1;overflow:hidden;min-height:0}
+
+/* ═══════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════ */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+
+/* group filter pills */
+.group-bar{
+  padding:7px 8px 0;flex-shrink:0;
+  display:flex;gap:5px;overflow-x:auto;padding-bottom:7px;
+  border-bottom:1px solid var(--border);
+}
+.group-bar::-webkit-scrollbar{height:2px}
+.gpill{
+  background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text2);font-size:10.5px;font-weight:600;
+  padding:3px 9px;border-radius:20px;cursor:pointer;white-space:nowrap;
+  transition:all var(--trans);font-family:'Hind Siliguri',sans-serif;flex-shrink:0;
+}
+.gpill.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.gpill:hover:not(.on){background:var(--bg4);color:var(--text)}
+
+.tabs{
+  display:flex;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.tab{
+  flex:1;padding:9px 2px;text-align:center;font-size:11px;font-weight:700;
+  cursor:pointer;border:none;background:transparent;
+  color:var(--text3);font-family:'Hind Siliguri',sans-serif;
+  transition:all var(--trans);border-bottom:2px solid transparent;white-space:nowrap;
+  letter-spacing:.2px;
+}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--glow)}
+.tab:hover:not(.active){color:var(--text2);background:var(--bg3)}
+
+.search-box{
+  padding:8px;border-bottom:1px solid var(--border);flex-shrink:0;
+  position:relative;
+}
+.search-icon{
+  position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  font-size:12px;color:var(--text3);pointer-events:none;
+}
+.search-input{
+  width:100%;background:var(--input-bg);border:1.5px solid var(--border);
+  border-radius:8px;padding:7px 10px 7px 30px;color:var(--text);
+  font-size:12.5px;font-family:'Hind Siliguri',sans-serif;
+  outline:none;transition:border-color var(--trans);
+}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--text3)}
+
+/* channel count badge */
+.ch-count{
+  padding:3px 8px;flex-shrink:0;background:var(--bg2);
+  font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.3px;
+  border-bottom:1px solid var(--border);
+}
+
+.ch-list{flex:1;overflow-y:auto;padding:5px}
+
+.pl-tab{flex:1;overflow-y:auto;padding:7px}
+
+/* empty state */
+.empty{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:8px;padding:36px 16px;text-align:center;
+}
+.empty-icon{font-size:34px;opacity:.35}
+.empty-title{font-size:13.5px;font-weight:700;color:var(--text)}
+.empty-desc{font-size:11.5px;color:var(--text2);line-height:1.7}
+.btn-sm{
+  background:var(--accent);color:#fff;border:none;padding:7px 16px;
+  border-radius:7px;font-size:12.5px;font-weight:600;cursor:pointer;
+  font-family:'Hind Siliguri',sans-serif;transition:all var(--trans);margin-top:4px;
+}
+.btn-sm:hover{background:var(--accent2)}
+
+/* channel item */
+.ch-item{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 8px;border-radius:8px;cursor:pointer;
+  border:1px solid transparent;margin-bottom:1px;
+  transition:background var(--trans), border-color var(--trans), transform .1s;
+  -webkit-user-select:none;user-select:none;
+}
+.ch-item:hover{background:var(--bg3);border-color:var(--border)}
+.ch-item:active{transform:scale(.98)}
+.ch-item.active{
+  background:linear-gradient(90deg, rgba(230,57,70,.18) 0%, rgba(230,57,70,.04) 100%);
+  border-color:rgba(230,57,70,.4);
+}
+
+.ch-logo{
+  width:34px;height:34px;border-radius:7px;flex-shrink:0;
+  background:var(--bg4);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:14px;overflow:hidden;
+}
+.ch-logo img{width:100%;height:100%;object-fit:contain;border-radius:6px}
+
+.ch-info{flex:1;min-width:0}
+.ch-name{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-grp{font-size:10.5px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;font-weight:500}
+
+.live-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;
+  animation:pulse-live 2s infinite;
+}
+@keyframes pulse-live{
+  0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}
+  50%{box-shadow:0 0 0 4px rgba(34,197,94,0)}
+}
+
+.fav-btn{
+  background:none;border:none;cursor:pointer;color:var(--text3);
+  font-size:14px;padding:3px;flex-shrink:0;transition:color var(--trans);
+  line-height:1;
+}
+.fav-btn:hover,.fav-btn.on{color:var(--gold)}
+
+/* skeleton */
+.skeleton{
+  height:48px;border-radius:8px;margin-bottom:2px;
+  background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);
+  background-size:200% 100%;animation:shimmer 1.3s infinite;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* playlist tab */
+.pl-item{
+  display:flex;align-items:center;gap:9px;padding:9px 10px;
+  border-radius:9px;border:1px solid var(--border);margin-bottom:5px;
+  background:var(--bg3);cursor:pointer;transition:all var(--trans);
+}
+.pl-item.on{border-color:var(--accent);background:rgba(230,57,70,.07)}
+.pl-item:hover:not(.on){border-color:var(--border2);background:var(--bg4)}
+.pl-name{font-size:12.5px;font-weight:700;color:var(--text)}
+.pl-count{font-size:10.5px;color:var(--text2);margin-top:2px;font-weight:500}
+.pl-del{
+  background:none;border:none;color:var(--text3);cursor:pointer;
+  font-size:14px;padding:4px;border-radius:5px;transition:all var(--trans);flex-shrink:0;
+}
+.pl-del:hover{color:var(--accent);background:rgba(230,57,70,.12)}
+.pl-default-badge{
+  font-size:8.5px;background:rgba(230,57,70,.15);color:var(--accent);
+  padding:2px 5px;border-radius:4px;font-weight:700;vertical-align:middle;
+}
+
+/* ═══════════════════════════════════════
+   CONTENT AREA
+═══════════════════════════════════════ */
+.content{
+  flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;
+  background:var(--bg);
+}
+
+/* player */
+.player-wrap{
+  position:relative;background:#000;flex-shrink:0;
+  aspect-ratio:16/9;width:100%;
+  max-height:calc(100dvh - var(--header-h) - 118px);
+  overflow:hidden;
+}
+
+#video{width:100%;height:100%;display:block;background:#000;outline:none}
+
+/* overlay when nothing playing */
+.player-overlay{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;
+  background:linear-gradient(135deg,#060810 0%,#0c1020 100%);pointer-events:none;
+}
+.player-overlay.off{display:none}
+.ov-logo{
+  font-family:'Teko',sans-serif;font-size:52px;font-weight:700;letter-spacing:4px;
+  color:rgba(255,255,255,.06);
+}
+.ov-logo span{color:rgba(230,57,70,.2)}
+.ov-msg{color:rgba(255,255,255,.25);font-size:12px}
+
+/* gradient overlays on video */
+.vd-grad-top{
+  position:absolute;top:0;left:0;right:0;height:70px;pointer-events:none;z-index:2;
+  background:linear-gradient(to bottom,rgba(0,0,0,.7) 0%,transparent 100%);
+  opacity:0;transition:opacity .3s;
+}
+.vd-grad-bot{
+  position:absolute;bottom:0;left:0;right:0;height:80px;pointer-events:none;z-index:2;
+  background:linear-gradient(to top,rgba(0,0,0,.8) 0%,transparent 100%);
+}
+.player-wrap:hover .vd-grad-top{opacity:1}
+
+.vid-topbar{
+  position:absolute;top:0;left:0;right:0;z-index:3;
+  padding:10px 12px;display:flex;align-items:center;gap:8px;
+  opacity:0;transition:opacity .3s;
+}
+.player-wrap:hover .vid-topbar{opacity:1}
+.vid-name{font-size:13.5px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+
+/* channel info bottom left */
+.vd-info{
+  position:absolute;left:14px;bottom:14px;z-index:3;pointer-events:none;
+  opacity:0;transition:opacity .3s;
+}
+.player-wrap:hover .vd-info{opacity:1}
+.vd-title{font-size:16px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.7)}
+.vd-meta{font-size:11px;color:rgba(255,255,255,.7);margin-top:3px}
+
+/* ═══════════════════════════════════════
+   ACTIONS BAR
+═══════════════════════════════════════ */
+.actions{
+  display:flex;align-items:center;gap:6px;flex-shrink:0;
+  padding:6px 10px;background:var(--bg2);border-bottom:1px solid var(--border);
+}
+.act-btn{
+  display:flex;align-items:center;gap:4px;
+  background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text2);padding:5px 10px;border-radius:7px;
+  font-size:11.5px;font-weight:600;cursor:pointer;
+  font-family:'Hind Siliguri',sans-serif;transition:all var(--trans);white-space:nowrap;
+}
+.act-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--text3)}
+.act-btn:active{transform:scale(.96)}
+.nav-btn{background:rgba(230,57,70,.1);border-color:rgba(230,57,70,.3);color:var(--accent)}
+.nav-btn:hover{background:rgba(230,57,70,.2);border-color:rgba(230,57,70,.5)}
+
+.vol-wrap{
+  display:flex;align-items:center;gap:5px;
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:7px;padding:4px 9px;
+}
+.vol-icon{font-size:12px;cursor:pointer;user-select:none}
+#volSlider{
+  width:68px;height:3px;accent-color:var(--accent);cursor:pointer;
+  border-radius:2px;vertical-align:middle;
+}
+.vol-pct{font-size:10.5px;color:var(--text2);min-width:26px;font-weight:600;font-family:monospace}
+
+/* ═══════════════════════════════════════
+   STATS
+═══════════════════════════════════════ */
+.stats{
+  display:flex;flex-shrink:0;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+}
+.stat{
+  flex:1;padding:8px 4px;text-align:center;
+  border-right:1px solid var(--border);
+  background:var(--bg2);
+}
+.stat:last-child{border-right:none}
+.stat-n{
+  font-family:'Teko',sans-serif;font-size:20px;
+  font-weight:600;color:var(--accent);line-height:1;
+}
+.stat-l{font-size:9.5px;color:var(--text2);margin-top:1px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+
+/* ═══════════════════════════════════════
+   KEYBOARD SHORTCUTS BAR
+═══════════════════════════════════════ */
+.kb{
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:6px 10px;flex-shrink:0;
+  display:flex;flex-wrap:wrap;gap:4px;align-items:center;
+}
+.kb-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.5px;margin-right:2px}
+.kb-i{display:flex;align-items:center;gap:2px;font-size:10px;color:var(--text2);font-weight:500}
+kbd{
+  background:var(--bg4);border:1px solid var(--border2);border-bottom-width:2px;
+  border-radius:4px;padding:1px 5px;font-size:9px;
+  color:var(--text);font-family:monospace;font-weight:700;
+}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:5px 14px;text-align:center;font-size:10.5px;color:var(--text2);flex-shrink:0;
+}
+footer a{color:var(--accent);text-decoration:none;font-weight:600}
+footer a:hover{color:var(--accent2)}
+
+/* ═══════════════════════════════════════
+   MODAL
+═══════════════════════════════════════ */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.overlay.show{opacity:1;pointer-events:all}
+.modal{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:14px;
+  padding:22px;width:440px;max-width:94vw;
+  transform:translateY(16px);transition:transform .2s;
+  box-shadow:0 24px 64px var(--shadow);
+}
+.overlay.show .modal{transform:translateY(0)}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-title{font-family:'Teko',sans-serif;font-size:20px;font-weight:700;letter-spacing:1px;color:var(--text)}
+.modal-x{
+  background:none;border:none;color:var(--text2);font-size:19px;cursor:pointer;
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  border-radius:6px;transition:all var(--trans);
+}
+.modal-x:hover{background:var(--bg3);color:var(--text)}
+.drop-zone{
+  border:2px dashed var(--border2);border-radius:10px;padding:24px;
+  text-align:center;cursor:pointer;transition:all var(--trans);margin-bottom:12px;
+  color:var(--text2);font-size:12.5px;
+}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--accent);background:rgba(230,57,70,.06);color:var(--text)}
+.drop-icon{font-size:28px;margin-bottom:6px;opacity:.6}
+.divider{
+  text-align:center;color:var(--text3);font-size:11px;margin:10px 0;position:relative;
+}
+.divider::before,.divider::after{
+  content:'';position:absolute;top:50%;width:43%;height:1px;background:var(--border);
+}
+.divider::before{left:0}.divider::after{right:0}
+.m-input{
+  width:100%;background:var(--input-bg);border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;color:var(--text);font-size:12.5px;
+  font-family:'Hind Siliguri',sans-serif;outline:none;
+  transition:border-color var(--trans);margin-bottom:9px;
+}
+.m-input:focus{border-color:var(--accent)}
+.m-input::placeholder{color:var(--text3)}
+.m-check{
+  display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2);
+  margin-bottom:12px;cursor:pointer;
+}
+.m-check input{accent-color:var(--accent);width:14px;height:14px;cursor:pointer}
+.btn-load{
+  width:100%;background:var(--accent);color:#fff;border:none;padding:10px;
+  border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;
+  font-family:'Hind Siliguri',sans-serif;transition:all var(--trans);
+}
+.btn-load:hover{background:var(--accent2)}
+.btn-load:disabled{opacity:.45;cursor:not-allowed}
+#fileInput{display:none}
+
+/* ═══════════════════════════════════════
+   CONTEXT MENU
+═══════════════════════════════════════ */
+.ctx{
+  position:fixed;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:10px;padding:5px;z-index:500;min-width:162px;
+  box-shadow:0 12px 40px var(--shadow);display:none;
+}
+.ctx.show{display:block}
+.ctx-i{
+  display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:6px;
+  cursor:pointer;font-size:12.5px;color:var(--text2);font-weight:500;transition:all var(--trans);
+}
+.ctx-i:hover{background:var(--bg5);color:var(--text)}
+.ctx-sep{height:1px;background:var(--border);margin:3px 0}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+.toast{
+  position:fixed;bottom:18px;right:16px;
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:9px;padding:9px 14px;font-size:12.5px;
+  color:var(--text);z-index:9999;
+  transform:translateY(56px);opacity:0;transition:all .28s;
+  max-width:260px;box-shadow:0 8px 28px var(--shadow);font-weight:500;
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{border-left:3px solid var(--green)}
+.toast.err{border-left:3px solid var(--accent)}
+.toast.info{border-left:3px solid var(--blue)}
+
+/* ═══════════════════════════════════════
+   MOBILE BOTTOM NAV
+═══════════════════════════════════════ */
+.mobile-nav{display:none}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — tablet
+═══════════════════════════════════════ */
+@media(max-width:900px){
+  :root{--sidebar-w:250px}
+  .dev-link{display:none}
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — mobile
+═══════════════════════════════════════ */
+@media(max-width:700px){
+  body{overflow:hidden;height:100dvh}
+
+  /* stack layout */
+  .main{flex-direction:column;overflow:hidden}
+
+  /* sidebar becomes top panel */
+  .sidebar{
+    width:100%;height:38vh;min-height:220px;max-height:280px;
+    border-right:none;border-bottom:1px solid var(--border);
+  }
+
+  /* hide group filter pills on mobile to save space */
+  .group-bar{display:none}
+
+  /* content fills rest */
+  .content{flex:1;min-height:0;overflow:hidden}
+
+  /* player 16:9 but capped */
+  .player-wrap{
+    max-height:none;
+    height:auto;
+    aspect-ratio:16/9;
+    width:100%;
+  }
+
+  /* hide vol on mobile */
+  .vol-wrap{display:none}
+
+  /* compact actions */
+  .actions{padding:5px 7px;gap:4px;flex-wrap:nowrap;overflow-x:auto}
+  .act-btn{padding:5px 8px;font-size:11px;white-space:nowrap}
+  .act-btn span.label{display:none} /* hide text labels, keep icons */
+
+  /* stats smaller */
+  .stats{flex-shrink:0}
+  .stat{padding:5px 2px}
+  .stat-n{font-size:16px}
+  .stat-l{font-size:8.5px}
+
+  /* hide KB shortcuts on mobile */
+  .kb{display:none}
+
+  /* footer shorter */
+  footer{padding:4px 10px}
+
+  /* header compact */
+  header{padding:0 10px;gap:6px}
+  .logo-net{display:none}
+  .btn-add{font-size:11.5px;padding:5px 9px}
+
+  /* bottom nav */
+  .mobile-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;
+    background:var(--bg2);border-top:1px solid var(--border);
+    z-index:999;padding:6px 0 calc(6px + env(safe-area-inset-bottom));
+    justify-content:space-around;
+  }
+  .mobile-nav button{
+    background:none;border:none;color:var(--text3);
+    font-size:11px;padding:4px 8px;border-radius:8px;
+    transition:all var(--trans);font-family:'Hind Siliguri',sans-serif;
+    display:flex;flex-direction:column;align-items:center;gap:1px;font-weight:600;
+    cursor:pointer;
+  }
+  .mobile-nav button .mnav-icon{font-size:17px;line-height:1}
+  .mobile-nav button.on{color:var(--accent)}
+  body{padding-bottom:calc(58px + env(safe-area-inset-bottom))}
+}
+</style>
+</head>
+<body>
+
+<div class="init-progress" id="initProg"></div>
+
+<!-- ═══ HEADER ═══ -->
+<header>
+  <div class="logo"><span class="f">F</span><span class="logo-net">ARABI NETWORK</span></div>
+  <div class="live-pill">LIVE</div>
+  <div class="load-indicator" id="loadInd" style="display:none">
+    <div class="spinner"></div>
+    <span id="loadMsg">লোড হচ্ছে...</span>
+  </div>
+  <div class="hdr-gap"></div>
+  <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="Theme (T)">🌙</button>
+  <button class="btn-add" onclick="openModal()">＋ Playlist</button>
+  <a class="dev-link" href="https://www.facebook.com/farabiahmedshakil11" target="_blank">Developer</a>
+</header>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="tabs">
+      <button class="tab active" onclick="goTab('all')">সব</button>
+      <button class="tab" onclick="goTab('live')">Live TV</button>
+      <button class="tab" onclick="goTab('movie')">মুভি</button>
+      <button class="tab" onclick="goTab('fav')">★ প্রিয়</button>
+      <button class="tab" onclick="goTab('pl')">Playlist</button>
+    </div>
+
+    <!-- search -->
+    <div class="search-box" id="searchBox">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="srch" type="search" autocomplete="off"
+        placeholder="চ্যানেল বা মুভি খুঁজুন..." oninput="debounceSearch()">
+    </div>
+
+    <!-- group pills -->
+    <div class="group-bar" id="groupBar"></div>
+
+    <!-- count -->
+    <div class="ch-count" id="chCount"></div>
+
+    <div class="ch-list" id="chList"></div>
+    <div class="pl-tab" id="plTab" style="display:none"></div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- player -->
+    <div class="player-wrap" id="playerWrap" oncontextmenu="showCtx(event)">
+      <video id="video" controls playsinline></video>
+
+      <div class="player-overlay" id="ov">
+        <div class="ov-logo"><span>F</span>ARABI NETWORK</div>
+        <div class="ov-msg">একটি চ্যানেল বা মুভি সিলেক্ট করুন</div>
+      </div>
+
+      <div class="vd-grad-top"></div>
+      <div class="vd-grad-bot"></div>
+
+      <div class="vid-topbar">
+        <div class="live-dot" id="vLiveDot" style="display:none"></div>
+        <div class="vid-name" id="vName">—</div>
+        <div class="live-pill" id="vLiveBadge" style="display:none">LIVE</div>
+        <div style="flex:1"></div>
+        <div style="font-family:Teko,sans-serif;font-size:15px;letter-spacing:2px;color:rgba(255,255,255,.3)">FARABI NETWORK</div>
+      </div>
+
+      <div class="vd-info">
+        <div class="vd-title" id="nfTitle"></div>
+        <div class="vd-meta" id="nfMeta"></div>
+      </div>
+    </div>
+
+    <!-- actions -->
+    <div class="actions">
+      <button class="act-btn" onclick="openVLC()" title="VLC-তে খুলুন">📺 <span class="label">VLC</span></button>
+      <button class="act-btn" onclick="doCopy()" title="URL কপি (C)">🔗 <span class="label">কপি</span></button>
+      <button class="act-btn" onclick="doNewTab()" title="নতুন ট্যাব">🔲 <span class="label">নতুন ট্যাব</span></button>
+      <button class="act-btn" onclick="doPiP()" title="Picture-in-Picture (I)">⧉ <span class="label">PiP</span></button>
+      <div style="flex:1"></div>
+      <div class="vol-wrap">
+        <span class="vol-icon" id="volIcon" onclick="toggleMute()" title="Mute (M)">🔊</span>
+        <input type="range" id="volSlider" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)">
+        <span class="vol-pct" id="volPct">100%</span>
+      </div>
+      <button class="act-btn nav-btn" onclick="prevCh()" title="আগের চ্যানেল (P)">⏮ Prev</button>
+      <button class="act-btn nav-btn" onclick="nextCh()" title="পরের চ্যানেল (N)">Next ⏭</button>
+    </div>
+
+    <!-- stats -->
+    <div class="stats">
+      <div class="stat"><div class="stat-n" id="sTot">0</div><div class="stat-l">মোট</div></div>
+      <div class="stat"><div class="stat-n" id="sLive">0</div><div class="stat-l">Live</div></div>
+      <div class="stat"><div class="stat-n" id="sMovie">0</div><div class="stat-l">মুভি</div></div>
+      <div class="stat"><div class="stat-n" id="sFav">0</div><div class="stat-l">প্রিয়</div></div>
+    </div>
+
+    <!-- keyboard shortcuts -->
+    <div class="kb">
+      <span class="kb-label">SHORTCUTS</span>
+      <div class="kb-i"><kbd>Space</kbd> Play/Pause</div>
+      <div class="kb-i"><kbd>F</kbd> Fullscreen</div>
+      <div class="kb-i"><kbd>M</kbd> Mute</div>
+      <div class="kb-i"><kbd>↑↓</kbd> Vol</div>
+      <div class="kb-i"><kbd>←→</kbd> ±10s</div>
+      <div class="kb-i"><kbd>N</kbd> Next</div>
+      <div class="kb-i"><kbd>P</kbd> Prev</div>
+      <div class="kb-i"><kbd>C</kbd> Copy</div>
+      <div class="kb-i"><kbd>T</kbd> Theme</div>
+      <div class="kb-i"><kbd>I</kbd> PiP</div>
+    </div>
+
+    <footer>FARABI NETWORK — Developed by <a href="https://www.facebook.com/farabiahmedshakil11" target="_blank">Farabi Ahmed Shakil</a></footer>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="modalOv" onclick="closeModalOut(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Playlist যোগ করুন</div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="drop-zone" id="dz" onclick="document.getElementById('fileInput').click()"
+      ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)">
+      <div class="drop-icon">📂</div>
+      <div>M3U / M3U8 ফাইল drag করুন বা ক্লিক করে বেছে নিন</div>
+    </div>
+    <input type="file" id="fileInput" accept=".m3u,.m3u8" onchange="loadFile(event)">
+    <div class="divider">অথবা URL দিন</div>
+    <input class="m-input" id="urlIn" type="url" placeholder="https://example.com/playlist.m3u8">
+    <input class="m-input" id="plName" type="text" placeholder="Playlist নাম (ঐচ্ছিক)">
+    <label class="m-check">
+      <input type="checkbox" id="makeDefault">
+      Default হিসেবে সেভ করুন — Reload-এ Auto লোড হবে
+    </label>
+    <button class="btn-load" id="btnLoad" onclick="loadURL()">লোড করুন</button>
+  </div>
+</div>
+
+<!-- CTX MENU -->
+<div class="ctx" id="ctxMenu">
+  <div class="ctx-i" onclick="openVLC()">📺 VLC-তে খুলুন</div>
+  <div class="ctx-i" onclick="doCopy()">🔗 URL কপি করুন</div>
+  <div class="ctx-i" onclick="doNewTab()">🔲 নতুন ট্যাবে খুলুন</div>
+  <div class="ctx-i" onclick="doPiP()">⧉ Picture-in-Picture</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-i" onclick="prevCh()">⏮ আগের চ্যানেল</div>
+  <div class="ctx-i" onclick="nextCh()">⏭ পরের চ্যানেল</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" id="mobileNav">
+  <button onclick="goTab('all')" id="mn0" class="on">
+    <span class="mnav-icon">🏠</span>সব
+  </button>
+  <button onclick="goTab('live')" id="mn1">
+    <span class="mnav-icon">📺</span>Live
+  </button>
+  <button onclick="goTab('movie')" id="mn2">
+    <span class="mnav-icon">🎬</span>মুভি
+  </button>
+  <button onclick="goTab('fav')" id="mn3">
+    <span class="mnav-icon">⭐</span>প্রিয়
+  </button>
+  <button onclick="goTab('pl')" id="mn4">
+    <span class="mnav-icon">📋</span>Playlist
+  </button>
+</nav>
+
+<!-- JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
+<script>
+'use strict';
+// ─────────────────────────────────────────
+// DEFAULT PLAYLISTS
+// ─────────────────────────────────────────
+const DEFAULT_PLS = [
+  { name:'PiratesTV',       url:'https://raw.githubusercontent.com/FunctionError/PiratesTv/main/combined_playlist.m3u' },
+  { name:'IPTV-Org Global', url:'https://iptv-org.github.io/iptv/index.m3u' },
+  { name:'IPTV Pulse',      url:'https://go.iptvpulse.top/ds10.m3u' }
+];
+
+// ─────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────
+const S = {
+  pls:      JSON.parse(localStorage.getItem('fn3_pls')  || '[]'),
+  favs:     JSON.parse(localStorage.getItem('fn3_favs') || '[]'),
+  theme:    localStorage.getItem('fn3_theme') || 'dark',
+  activePl: +( localStorage.getItem('fn3_activePl') || 0 ),
+  channels: [],
+  filtered: [],
+  groups:   [],
+  activeGroup: 'all',
+  curIdx:   -1,
+  tab:      'all',
+  hlsInst:  null,
+};
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+window.addEventListener('load', async () => {
+  applyTheme(S.theme);
+  if (!S.pls.length) {
+    await loadDefaultPlaylists();
+  } else {
+    const idx = Math.min(S.activePl, S.pls.length - 1);
+    if (S.pls[idx]) activatePl(idx, false);
+  }
+  updateStats();
+  renderPlTab();
+});
+
+// ─────────────────────────────────────────
+// LOAD DEFAULTS
+// ─────────────────────────────────────────
+async function loadDefaultPlaylists() {
+  const prog = $('initProg');
+  showLoader('Default playlist লোড হচ্ছে...');
+  prog.style.transform = 'scaleX(0.04)';
+  let loaded = 0;
+  for (let i = 0; i < DEFAULT_PLS.length; i++) {
+    const def = DEFAULT_PLS[i];
+    showLoader(`${def.name} লোড হচ্ছে… (${i+1}/${DEFAULT_PLS.length})`);
+    prog.style.transform = `scaleX(${(i+1)/DEFAULT_PLS.length * 0.9})`;
+    try {
+      const text = await fetchM3U(def.url);
+      const channels = parseM3U(text);
+      if (channels.length) {
+        S.pls.push({ id: Date.now()+i, name: def.name, url: def.url, channels, added: today(), isDefault: true });
+        loaded++;
+      }
+    } catch(e) { console.warn('Failed:', def.name, e); }
+  }
+  prog.style.transform = 'scaleX(1)';
+  savePls(); hideLoader();
+  setTimeout(() => prog.style.transform = 'scaleX(0)', 600);
+  if (S.pls.length) {
+    S.activePl = 0; activatePl(0, false);
+    showToast(`${loaded} টি Default Playlist লোড হয়েছে ✓`, 'ok');
+  } else {
+    renderChList();
+    showToast('Default playlists লোড হয়নি। Manual যোগ করুন।', 'err');
+  }
+  renderPlTab();
+}
+
+// ─────────────────────────────────────────
+// FETCH M3U  (direct → proxy fallback)
+// ─────────────────────────────────────────
+async function fetchM3U(url) {
+  try {
+    const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
+    if (r.ok) return await r.text();
+  } catch {}
+  const px = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+  const r2 = await fetch(px, { signal: AbortSignal.timeout(16000) });
+  if (!r2.ok) throw new Error('HTTP ' + r2.status);
+  return await r2.text();
+}
+
+// ─────────────────────────────────────────
+// PARSE M3U  (fast, single-pass)
+// ─────────────────────────────────────────
+function parseM3U(text) {
+  const lines = text.split(/\r?\n/);
+  const out = []; let cur = null;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line || line === '#EXTM3U') continue;
+    if (line.startsWith('#EXTINF')) {
+      cur = { name:'', logo:'', group:'', url:'', type:'live' };
+      const nm = line.match(/,(.+)$/);       if (nm) cur.name = nm[1].trim();
+      const lg = line.match(/tvg-logo="([^"]+)"/i);   if (lg) cur.logo = lg[1];
+      const gr = line.match(/group-title="([^"]+)"/i); if (gr) cur.group = gr[1];
+      const na = line.match(/tvg-name="([^"]+)"/i);    if (na?.[1]) cur.name = na[1];
+      const g  = (cur.group||'').toLowerCase();
+      const n  = (cur.name||'').toLowerCase();
+      if (g.includes('movie')||g.includes('মুভি')||g.includes('film')||
+          g.includes('vod')  ||n.match(/\b(19|20)\d{2}\b/)) cur.type = 'movie';
+    } else if (cur && !line.startsWith('#')) {
+      cur.url = line; out.push(cur); cur = null;
+    }
+  }
+  return out;
+}
+
+// ─────────────────────────────────────────
+// PLAYLIST MANAGEMENT
+// ─────────────────────────────────────────
+function activatePl(idx, showMsg=true) {
+  S.activePl = idx;
+  localStorage.setItem('fn3_activePl', idx);
+  const pl = S.pls[idx]; if (!pl) return;
+  S.channels = pl.channels;
+  S.filtered = [...S.channels];
+  S.tab = 'all'; S.curIdx = -1; S.activeGroup = 'all';
+  buildGroups();
+  updateTabsUI();
+  doFilter();
+  updateStats();
+  renderPlTab();
+  if (showMsg) showToast(`${pl.name} লোড (${pl.channels.length} চ্যানেল)`, 'ok');
+}
+
+function savePls() {
+  const toSave = S.pls.map(p => ({...p, channels: p.channels.slice(0,5000)}));
+  try { localStorage.setItem('fn3_pls', JSON.stringify(toSave)); }
+  catch {
+    const lite = S.pls.map(p=>({id:p.id,name:p.name,url:p.url,added:p.added,isDefault:p.isDefault,channels:[]}));
+    localStorage.setItem('fn3_pls', JSON.stringify(lite));
+  }
+}
+
+function deletePl(idx, e) {
+  e.stopPropagation();
+  S.pls.splice(idx,1); savePls();
+  if (!S.pls.length) { S.channels=[]; S.filtered=[]; S.curIdx=-1; renderChList(); updateStats(); }
+  else { S.activePl = Math.min(S.activePl, S.pls.length-1); activatePl(S.activePl, false); }
+  renderPlTab(); showToast('Playlist মুছে ফেলা হয়েছে','info');
+}
+
+function reloadPl(idx, e) {
+  e.stopPropagation();
+  const pl = S.pls[idx];
+  if (!pl?.url) { showToast('URL নেই','err'); return; }
+  showLoader(`${pl.name} রিলোড…`);
+  fetchM3U(pl.url).then(text => {
+    const ch = parseM3U(text);
+    if (ch.length) { S.pls[idx].channels = ch; savePls(); activatePl(idx); showToast(`${pl.name} আপডেট ✓`,'ok'); }
+    else showToast('চ্যানেল পাওয়া যায়নি','err');
+    hideLoader();
+  }).catch(()=>{ showToast('রিলোড ব্যর্থ','err'); hideLoader(); });
+}
+
+// ─────────────────────────────────────────
+// GROUP FILTER
+// ─────────────────────────────────────────
+function buildGroups() {
+  const seen = new Set(); const groups = [];
+  for (const ch of S.channels) {
+    const g = ch.group||''; if (g && !seen.has(g)) { seen.add(g); groups.push(g); }
+  }
+  S.groups = groups.slice(0, 30); // top 30 groups
+  renderGroupBar();
+}
+
+function renderGroupBar() {
+  const bar = $('groupBar');
+  if (!S.groups.length) { bar.innerHTML=''; return; }
+  bar.innerHTML = `<button class="gpill ${S.activeGroup==='all'?'on':''}" onclick="setGroup('all')">সব</button>`
+    + S.groups.map(g=>`<button class="gpill ${S.activeGroup===g?'on':''}" onclick="setGroup('${esc(g)}')">${esc(g)}</button>`).join('');
+}
+
+function setGroup(g) {
+  S.activeGroup = g; renderGroupBar(); doFilter();
+}
+
+// ─────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────
+function openModal()  { $('modalOv').classList.add('show'); }
+function closeModal() {
+  $('modalOv').classList.remove('show');
+  $('urlIn').value=''; $('plName').value=''; $('makeDefault').checked=false;
+}
+function closeModalOut(e) { if(e.target===$('modalOv')) closeModal(); }
+
+function dzOver(e)  { e.preventDefault(); $('dz').classList.add('drag'); }
+function dzLeave()  { $('dz').classList.remove('drag'); }
+function dzDrop(e)  { e.preventDefault(); dzLeave(); const f=e.dataTransfer.files[0]; if(f) readFile(f); }
+function loadFile(e){ const f=e.target.files[0]; if(f) readFile(f); }
+function readFile(f){
+  const r=new FileReader();
+  r.onload=ev=>parseAndAdd(ev.target.result, $('plName').value||f.name.replace(/\.m3u8?$/i,''), null, $('makeDefault').checked);
+  r.readAsText(f);
+}
+
+async function loadURL() {
+  const url = $('urlIn').value.trim();
+  if (!url) { showToast('URL দিন','err'); return; }
+  const btn = $('btnLoad'); btn.disabled=true; btn.textContent='লোড হচ্ছে…';
+  try {
+    const text = await fetchM3U(url);
+    const name = $('plName').value || 'Playlist '+(S.pls.length+1);
+    parseAndAdd(text, name, url, $('makeDefault').checked);
+  } catch(e) { showToast('লোড ব্যর্থ: '+e.message,'err'); }
+  finally { btn.disabled=false; btn.textContent='লোড করুন'; }
+}
+
+function parseAndAdd(text, name, url, makeDefault) {
+  const ch = parseM3U(text);
+  if (!ch.length) { showToast('কোনো চ্যানেল পাওয়া যায়নি','err'); return; }
+  const pl = { id:Date.now(), name, url:url||'', channels:ch, added:today(), isDefault:makeDefault };
+  S.pls.push(pl); savePls(); activatePl(S.pls.length-1); closeModal();
+  showToast(`${ch.length} টি চ্যানেল যোগ হয়েছে ✓`,'ok');
+}
+
+// ─────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────
+const TAB_IDS = ['all','live','movie','fav','pl'];
+
+function goTab(t) {
+  S.tab = t; S.activeGroup = 'all';
+  updateTabsUI(); updateMobileNav(t);
+  const isPl = t==='pl';
+  $('searchBox').style.display  = isPl?'none':'block';
+  $('groupBar').style.display   = isPl?'none':'flex';
+  $('chCount').style.display    = isPl?'none':'block';
+  $('chList').style.display     = isPl?'none':'block';
+  $('plTab').style.display      = isPl?'block':'none';
+  if (isPl) renderPlTab(); else { renderGroupBar(); doFilter(); }
+}
+
+function updateTabsUI() {
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active', TAB_IDS[i]===S.tab));
+}
+
+function updateMobileNav(t) {
+  const map={all:0,live:1,movie:2,fav:3,pl:4};
+  document.querySelectorAll('.mobile-nav button').forEach((b,i)=>b.classList.toggle('on',i===map[t]));
+}
+
+// ─────────────────────────────────────────
+// SEARCH (debounced 220ms)
+// ─────────────────────────────────────────
+let _st;
+function debounceSearch(){ clearTimeout(_st); _st=setTimeout(doFilter,220); }
+
+// ─────────────────────────────────────────
+// FILTER
+// ─────────────────────────────────────────
+function doFilter() {
+  showSkeleton();
+  requestAnimationFrame(()=>setTimeout(_filter,0));
+}
+
+function _filter() {
+  const q = $('srch').value.trim().toLowerCase();
+  let list = S.channels;
+
+  // tab filter
+  if      (S.tab==='live')  list = list.filter(c=>c.type==='live');
+  else if (S.tab==='movie') list = list.filter(c=>c.type==='movie');
+  else if (S.tab==='fav')   list = list.filter(c=>S.favs.includes(c.url));
+
+  // group filter
+  if (S.activeGroup !== 'all') list = list.filter(c=>c.group===S.activeGroup);
+
+  // search
+  if (q) {
+    list = list.filter(c=>
+      (c.name||'').toLowerCase().includes(q) ||
+      (c.group||'').toLowerCase().includes(q)
+    );
+  }
+
+  S.filtered = list;
+  renderChList();
+  updateChCount();
+}
+
+function updateChCount() {
+  const el = $('chCount');
+  if (!el) return;
+  const n = S.filtered.length, t = S.channels.length;
+  el.textContent = n===t ? `${t} চ্যানেল` : `${n} / ${t} চ্যানেল`;
+}
+
+// ─────────────────────────────────────────
+// RENDER CHANNEL LIST  (virtual: max 350)
+// ─────────────────────────────────────────
+function showSkeleton() {
+  $('chList').innerHTML =
+    '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+}
+
+function renderChList() {
+  const el = $('chList');
+  if (!S.channels.length) {
+    el.innerHTML=`<div class="empty"><div class="empty-icon">📡</div><div class="empty-title">কোনো Playlist নেই</div><div class="empty-desc">উপরে বাটন দিয়ে M3U/M3U8<br>ফাইল বা লিংক যোগ করুন।</div><button class="btn-sm" onclick="openModal()">Playlist যোগ করুন</button></div>`;
+    return;
+  }
+  if (!S.filtered.length) {
+    el.innerHTML=`<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">কিছু পাওয়া যায়নি</div><div class="empty-desc">অন্য শব্দ দিয়ে খুঁজুন।</div></div>`;
+    return;
+  }
+  const slice = S.filtered.slice(0, 350);
+  const frag  = document.createDocumentFragment();
+  slice.forEach((ch, i) => {
+    const div  = document.createElement('div');
+    const fav  = S.favs.includes(ch.url);
+    const isAct= i === S.curIdx;
+    div.className = 'ch-item' + (isAct?' active':'');
+    div.innerHTML =
+      `<div class="ch-logo">${ch.logo?`<img loading="lazy" src="${esc(ch.logo)}" onerror="this.parentNode.innerHTML='${ch.type==='movie'?'🎬':'📺'}'">`:ch.type==='movie'?'🎬':'📺'}</div>`+
+      `<div class="ch-info"><div class="ch-name">${esc(ch.name)}</div><div class="ch-grp">${esc(ch.group||(ch.type==='movie'?'মুভি':'Live TV'))}</div></div>`+
+      `${ch.type==='live'?'<div class="live-dot"></div>':''}`+
+      `<button class="fav-btn${fav?' on':''}" title="${fav?'প্রিয় থেকে সরান':'প্রিয়তে যোগ'}">${fav?'★':'☆'}</button>`;
+    div.querySelector('.fav-btn').addEventListener('click', e=>{ e.stopPropagation(); toggleFav(ch.url); });
+    div.addEventListener('click', ()=>{ S.curIdx=i; playCh(ch); renderChList(); });
+    frag.appendChild(div);
+  });
+  el.innerHTML=''; el.appendChild(frag);
+  updateChCount();
+}
+
+function renderPlTab() {
+  const el=$('plTab');
+  if (!S.pls.length){
+    el.innerHTML=`<div class="empty"><div class="empty-icon">📋</div><div style="font-size:12px;color:var(--text2)">কোনো playlist নেই।</div></div>`;
+    return;
+  }
+  el.innerHTML=S.pls.map((pl,i)=>`
+    <div class="pl-item${i===S.activePl?' on':''}" onclick="activatePl(${i})">
+      <div style="font-size:18px">📋</div>
+      <div style="flex:1;min-width:0">
+        <div class="pl-name">${esc(pl.name)} ${pl.isDefault?'<span class="pl-default-badge">DEFAULT</span>':''}</div>
+        <div class="pl-count">${pl.channels.length} চ্যানেল · ${pl.added}</div>
+      </div>
+      ${pl.url?`<button class="pl-del" onclick="reloadPl(${i},event)" title="রিলোড">🔄</button>`:''}
+      <button class="pl-del" onclick="deletePl(${i},event)" title="মুছুন">🗑</button>
+    </div>`).join('');
+}
+
+// ─────────────────────────────────────────
+// PLAYER
+// ─────────────────────────────────────────
+function playCh(ch) {
+  const video = $('video'), ov=$('ov');
+  ov.classList.add('off');
+  $('vName').textContent = ch.name;
+  const nft=$('nfTitle'), nfm=$('nfMeta');
+  if(nft) nft.textContent = ch.name;
+  if(nfm) nfm.textContent = (ch.type==='movie'?'Movie':'Live TV') + ' • Farabi Network';
+  $('vLiveDot').style.display  = ch.type==='live'?'block':'none';
+  $('vLiveBadge').style.display= ch.type==='live'?'flex':'none';
+
+  if (S.hlsInst){ S.hlsInst.destroy(); S.hlsInst=null; }
+  const url=ch.url;
+  const isHLS = /\.m3u8?($|\?)/i.test(url) || url.includes('.m3u8') || url.includes('.m3u');
+
+  if (isHLS && typeof Hls!=='undefined' && Hls.isSupported()) {
+    const hls = new Hls({ enableWorker:true, lowLatencyMode:true, maxBufferLength:30 });
+    S.hlsInst = hls;
+    hls.loadSource(url);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, ()=>video.play().catch(()=>{}));
+    hls.on(Hls.Events.ERROR, (_,d)=>{ if(d.fatal) showToast('স্ট্রিম এরর','err'); });
+  } else {
+    video.src=url; video.play().catch(()=>{});
+  }
+  document.title = ch.name+' — Farabi Network';
+}
+
+// ─────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────
+function nextCh() {
+  if(!S.filtered.length) return;
+  S.curIdx=(S.curIdx+1)%S.filtered.length;
+  playCh(S.filtered[S.curIdx]); renderChList(); scrollActive();
+}
+function prevCh() {
+  if(!S.filtered.length) return;
+  S.curIdx=(S.curIdx-1+S.filtered.length)%S.filtered.length;
+  playCh(S.filtered[S.curIdx]); renderChList(); scrollActive();
+}
+function scrollActive() {
+  const a=document.querySelector('.ch-item.active');
+  if(a) a.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+
+// ─────────────────────────────────────────
+// STATS
+// ─────────────────────────────────────────
+function updateStats() {
+  $('sTot').textContent  = S.channels.length;
+  $('sLive').textContent = S.channels.filter(c=>c.type==='live').length;
+  $('sMovie').textContent= S.channels.filter(c=>c.type==='movie').length;
+  $('sFav').textContent  = S.favs.length;
+}
+
+// ─────────────────────────────────────────
+// FAVORITES
+// ─────────────────────────────────────────
+function toggleFav(url) {
+  const i=S.favs.indexOf(url);
+  if(i>-1){ S.favs.splice(i,1); showToast('প্রিয় থেকে সরানো হয়েছে','info'); }
+  else    { S.favs.push(url);   showToast('প্রিয়তে যোগ হয়েছে ★','ok'); }
+  localStorage.setItem('fn3_favs', JSON.stringify(S.favs));
+  doFilter(); updateStats();
+}
+
+// ─────────────────────────────────────────
+// ACTIONS
+// ─────────────────────────────────────────
+function getCurURL() { return S.filtered[S.curIdx]?.url||null; }
+function openVLC()   { const u=getCurURL(); if(!u){showToast('চ্যানেল সিলেক্ট করুন','err');return;} window.location.href='vlc://'+u; }
+function doCopy()    { const u=getCurURL(); if(!u){showToast('চ্যানেল সিলেক্ট করুন','err');return;} navigator.clipboard?.writeText(u).then(()=>showToast('URL কপি হয়েছে ✓','ok')); }
+function doNewTab()  { const u=getCurURL(); if(!u){showToast('চ্যানেল সিলেক্ট করুন','err');return;} window.open(u,'_blank'); }
+
+// ─────────────────────────────────────────
+// VOLUME
+// ─────────────────────────────────────────
+function setVolume(val) {
+  const v=$('video'); v.volume=parseFloat(val); v.muted=parseFloat(val)===0; syncVolUI();
+}
+function toggleMute() {
+  const v=$('video'); v.muted=!v.muted; syncVolUI();
+  showToast(v.muted?'🔇 মিউট':'🔊 আনমিউট','info');
+}
+function syncVolUI() {
+  const v=$('video'), vol=v.muted?0:v.volume;
+  const sl=$('volSlider'), pct=$('volPct'), icon=$('volIcon');
+  if(sl)  sl.value=vol;
+  if(pct) pct.textContent=Math.round(vol*100)+'%';
+  if(icon) icon.textContent=vol===0?'🔇':vol<0.5?'🔉':'🔊';
+}
+
+// ─────────────────────────────────────────
+// PiP
+// ─────────────────────────────────────────
+function doPiP() {
+  const v=$('video');
+  if(!v.src&&!v.srcObject){ showToast('আগে একটি চ্যানেল চালু করুন','err'); return; }
+  if(document.pictureInPictureElement) { document.exitPictureInPicture().catch(()=>{}); }
+  else if(v.requestPictureInPicture)   { v.requestPictureInPicture().catch(()=>showToast('PiP সাপোর্ট নেই','err')); }
+  else showToast('এই ব্রাউজারে PiP নেই','err');
+}
+
+// ─────────────────────────────────────────
+// THEME
+// ─────────────────────────────────────────
+function toggleTheme(){ applyTheme(S.theme==='dark'?'light':'dark'); }
+function applyTheme(t){
+  S.theme=t;
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem('fn3_theme',t);
+  $('themeBtn').textContent=t==='dark'?'☀️':'🌙';
+}
+
+// ─────────────────────────────────────────
+// LOADER
+// ─────────────────────────────────────────
+function showLoader(msg){ $('loadInd').style.display='flex'; $('loadMsg').textContent=msg||'লোড হচ্ছে…'; }
+function hideLoader()   { $('loadInd').style.display='none'; }
+
+// ─────────────────────────────────────────
+// CONTEXT MENU
+// ─────────────────────────────────────────
+function showCtx(e) {
+  e.preventDefault();
+  const m=$('ctxMenu'); m.classList.add('show');
+  m.style.left=Math.min(e.clientX,window.innerWidth-170)+'px';
+  m.style.top =Math.min(e.clientY,window.innerHeight-180)+'px';
+}
+document.addEventListener('click',()=>$('ctxMenu').classList.remove('show'));
+
+// ─────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────
+let _tt;
+function showToast(msg,type='info'){
+  const t=$('toast'); t.textContent=msg; t.className='toast '+type+' show';
+  clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ─────────────────────────────────────────
+// KEYBOARD SHORTCUTS
+// ─────────────────────────────────────────
+document.addEventListener('keydown', e=>{
+  const tag=e.target.tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
+  const v=$('video');
+  switch(e.code){
+    case 'Space':
+      e.preventDefault(); v.paused?v.play():v.pause(); break;
+    case 'KeyF':
+      e.preventDefault();
+      if(document.fullscreenElement){ document.exitFullscreen?.(); }
+      else {
+        const pw=$('playerWrap');
+        (pw.requestFullscreen||pw.webkitRequestFullscreen||pw.mozRequestFullScreen||function(){}).call(pw);
+      }
+      break;
+    case 'KeyM': toggleMute(); break;
+    case 'ArrowUp':
+      e.preventDefault(); v.volume=Math.min(1,+(v.volume+.1).toFixed(1)); syncVolUI(); break;
+    case 'ArrowDown':
+      e.preventDefault(); v.volume=Math.max(0,+(v.volume-.1).toFixed(1)); syncVolUI(); break;
+    case 'ArrowRight':
+      e.preventDefault(); if(v.duration) v.currentTime+=10; break;
+    case 'ArrowLeft':
+      e.preventDefault(); if(v.duration) v.currentTime-=10; break;
+    case 'KeyN': nextCh(); break;
+    case 'KeyP': prevCh(); break;
+    case 'KeyC': doCopy(); break;
+    case 'KeyT': toggleTheme(); break;
+    case 'KeyI': doPiP(); break;
+    case 'Enter':
+      if(S.filtered[S.curIdx]) playCh(S.filtered[S.curIdx]); break;
+    case 'Escape': closeModal(); break;
+  }
+});
+
+// touch swipe on player → next/prev
+(()=>{
+  let tx=0;
+  const pw=$('playerWrap');
+  pw.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+  pw.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-tx;
+    if(Math.abs(dx)>60){ dx<0?nextCh():prevCh(); }
+  },{passive:true});
+})();
+
+// service worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+
+// ─────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────
+function $(id){ return document.getElementById(id); }
+function esc(s){ if(!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function today(){ return new Date().toLocaleDateString('bn-BD'); }
+</script>
+</body>
+</html>
