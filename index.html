@@ -1682,11 +1682,9 @@ function syncFsBtn() {
 }
 
 function retryPlay() {
-  const video = $('video');
   $('vidError').classList.remove('show');
   if (S.lastUrl) {
-    S.retryCount++;
-    if (S.retryCount > 3) { showToast('বারবার ব্যর্থ। চ্যানেল পরিবর্তন করুন।','err'); return; }
+    showToast('আবার চেষ্টা হচ্ছে…', 'info');
     playUrl(S.lastUrl);
   }
 }
@@ -1770,15 +1768,29 @@ async function loadDefaultPlaylists() {
 // ─────────────────────────────────────────
 // FETCH M3U
 // ─────────────────────────────────────────
+const MY_PROXY = 'https://plain-mode-daaf.usergamil15.workers.dev';
+
 async function fetchM3U(url) {
-  try {
-    const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
-    if (r.ok) return await r.text();
-  } catch {}
-  const px = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-  const r2 = await fetch(px, { signal: AbortSignal.timeout(16000) });
-  if (!r2.ok) throw new Error('HTTP ' + r2.status);
-  return await r2.text();
+  const proxies = [
+    u => u,
+    u => MY_PROXY + '?url=' + encodeURIComponent(u),
+    u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+    u => 'https://corsproxy.io/?' + encodeURIComponent(u),
+  ];
+  let lastErr = null;
+  for (let i = 0; i < proxies.length; i++) {
+    try {
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), i === 0 ? 14000 : 22000);
+      const r = await fetch(proxies[i](url), { signal: ctrl.signal });
+      clearTimeout(tid);
+      if (r.ok) {
+        const text = await r.text();
+        if (text && text.length > 10) return text;
+      }
+    } catch(e) { lastErr = e; }
+  }
+  throw new Error('সব proxy ব্যর্থ: ' + (lastErr?.message || 'unknown'));
 }
 
 // ─────────────────────────────────────────
@@ -2040,41 +2052,77 @@ function renderPlTab() {
 // ─────────────────────────────────────────
 // PLAYER
 // ─────────────────────────────────────────
+const STREAM_PROXIES = [
+  u => u,
+  u => MY_PROXY + '?url=' + encodeURIComponent(u),
+  u => 'https://corsproxy.io/?' + encodeURIComponent(u),
+  u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+];
+
+function makeHlsInst(url, video, proxyIdx, origUrl) {
+  if (S.hlsInst) { S.hlsInst.destroy(); S.hlsInst = null; }
+  const hls = new Hls({
+    enableWorker: true, lowLatencyMode: true,
+    maxBufferLength: 60, maxMaxBufferLength: 120,
+    fragLoadingTimeOut: 30000, fragLoadingMaxRetry: 6, fragLoadingRetryDelay: 500,
+    manifestLoadingTimeOut: 25000, manifestLoadingMaxRetry: 5,
+    levelLoadingTimeOut: 25000, levelLoadingMaxRetry: 5,
+    startLevel: -1,
+  });
+  S.hlsInst = hls;
+  let netRetry = 0, mediaRetry = 0;
+  hls.loadSource(url);
+  hls.attachMedia(video);
+  hls.on(Hls.Events.MANIFEST_PARSED, () => {
+    video.play().catch(()=>{});
+    $('vidBuffer').classList.remove('show');
+  });
+  hls.on(Hls.Events.ERROR, (_, d) => {
+    if (!d.fatal) return;
+    if (d.type === Hls.ErrorTypes.NETWORK_ERROR) {
+      netRetry++;
+      if (netRetry <= 2) { setTimeout(() => hls.startLoad(), 1500 * netRetry); }
+      else {
+        hls.destroy(); S.hlsInst = null;
+        const next = proxyIdx + 1;
+        if (next < STREAM_PROXIES.length) {
+          showToast('Proxy ' + next + ' দিয়ে চেষ্টা হচ্ছে…', 'info');
+          makeHlsInst(STREAM_PROXIES[next](origUrl), video, next, origUrl);
+        } else {
+          $('vidBuffer').classList.remove('show'); $('vidError').classList.add('show');
+          showToast('স্ট্রিম লোড ব্যর্থ', 'err');
+        }
+      }
+    } else if (d.type === Hls.ErrorTypes.MEDIA_ERROR) {
+      mediaRetry++;
+      if (mediaRetry <= 3) { hls.recoverMediaError(); }
+      else { hls.destroy(); S.hlsInst = null; video.src = origUrl; video.load(); video.play().catch(()=>{}); }
+    } else {
+      hls.destroy(); S.hlsInst = null;
+      const next = proxyIdx + 1;
+      if (next < STREAM_PROXIES.length) {
+        showToast('Proxy ' + next + ' দিয়ে চেষ্টা হচ্ছে…', 'info');
+        makeHlsInst(STREAM_PROXIES[next](origUrl), video, next, origUrl);
+      } else {
+        $('vidBuffer').classList.remove('show'); $('vidError').classList.add('show');
+        showToast('স্ট্রিম এরর', 'err');
+      }
+    }
+  });
+}
+
 function playUrl(url) {
   const video = $('video');
   S.lastUrl = url; S.retryCount = 0;
   $('vidError').classList.remove('show');
   $('vidBuffer').classList.add('show');
-
-  if (S.hlsInst){ S.hlsInst.destroy(); S.hlsInst=null; }
-
-  const isHLS  = /\.m3u8?($|\?)/i.test(url) || url.includes('.m3u8') || url.includes('.m3u');
-  const isFTP  = /^ftp:\/\//i.test(url);
-
-  if (isFTP) {
-    showToast('FTP লিংক চেষ্টা করা হচ্ছে…','info');
-    video.src = url; video.load(); video.play().catch(()=>{ $('vidError').classList.add('show'); });
-    return;
-  }
-
-  if (isHLS && typeof Hls!=='undefined' && Hls.isSupported()) {
-    const hls = new Hls({
-      enableWorker: true, lowLatencyMode: true,
-      maxBufferLength: 30, maxMaxBufferLength: 60,
-      fragLoadingTimeOut: 20000, manifestLoadingTimeOut: 15000,
-    });
-    S.hlsInst = hls;
-    hls.loadSource(url);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, () => { video.play().catch(()=>{}); });
-    hls.on(Hls.Events.ERROR, (_, d) => {
-      if (d.fatal) {
-        if (d.type === Hls.ErrorTypes.NETWORK_ERROR) { hls.startLoad(); }
-        else if (d.type === Hls.ErrorTypes.MEDIA_ERROR) { hls.recoverMediaError(); }
-        else { $('vidBuffer').classList.remove('show'); $('vidError').classList.add('show'); showToast('স্ট্রিম এরর','err'); }
-      }
-    });
-  } else if (isHLS && video.canPlayType('application/vnd.apple.mpegurl')) {
+  video.src = '';
+  if (/^ftp:\/\//i.test(url)) { showToast('FTP সাপোর্ট নেই','err'); $('vidBuffer').classList.remove('show'); return; }
+  const isDirectVideo = /\.(mp4|mkv|avi|mov|webm|flv|wmv|ogg)($|\?)/i.test(url);
+  if (isDirectVideo) { video.src = url; video.load(); video.play().catch(()=>{}); return; }
+  if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+    makeHlsInst(STREAM_PROXIES[0](url), video, 0, url);
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = url; video.load(); video.play().catch(()=>{});
   } else {
     video.src = url; video.load(); video.play().catch(()=>{});
